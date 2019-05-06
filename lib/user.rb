@@ -2,10 +2,15 @@ class User < ActiveRecord::Base
   belongs_to :stage
   has_many :enemies, through: :stages
 
-  def user_stats(superhero_name)
-    stats = []
+  def grab_data
     stats_string = RestClient.get('https://akabab.github.io/superhero-api/api/all.json')
     stats_array = JSON.parse(stats_string)
+    stats_array
+  end
+  
+  def user_stats(superhero_name)
+    stats = []
+    stats_array = grab_data
     stats_array.each do |hero_hash|
       if superhero_name == hero_hash['name']
         self.name = hero_hash['name']
