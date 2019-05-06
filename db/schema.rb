@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 2019_05_06_183224) do
     t.string "speed"
   end
 
-  create_table "stage", force: :cascade do |t|
+  create_table "stages", force: :cascade do |t|
     t.integer "user_id"
     t.integer "enemy_id"
   end
