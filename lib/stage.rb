@@ -2,7 +2,7 @@ class Stage < ActiveRecord::Base
   has_many :users
   has_many :enemies
 
-  def grab_data
+  def get_data
     stats_string = RestClient.get('https://akabab.github.io/superhero-api/api/all.json')
     stats_array = JSON.parse(stats_string)
     stats_array
@@ -31,11 +31,7 @@ class Stage < ActiveRecord::Base
 
   end
 
-  def defend
-
-  end
-
-  def special_move
+  def defend #lowers enemy attack and recovers some hp
 
   end
 
