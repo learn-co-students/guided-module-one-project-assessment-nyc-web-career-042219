@@ -61,12 +61,25 @@ class Stage < ActiveRecord::Base
   end
 
 
-  def defend #lowers enemy attack and recovers some hp
+  def defend(user, enemy) #lowers enemy attack and recovers some hp
+    puts "You defended... like a coward."
+    user.def += 5
 
   end
 
-  def run_away
+  def run_away(user, enemy)
     puts "Bearded Wizard: HAHAHA you think you can run away???"
+
+    #chance to die cause you tried to run
+    die_chance = rand(100)
+    case die_chance
+    when 0..95
+      puts "#{enemy.name} slashed you in the back as you tried to run away, you coward."
+      user.hp = 0
+    else
+      puts "Holy crap, the enemy actually let you run away."
+      enemy.hp = 0
+    end
   end
 
   def enemy_move(user, enemy)
@@ -78,6 +91,7 @@ class Stage < ActiveRecord::Base
       attack(enemy, user)
     when 7..9
       #enemy defends
+
     end
   end
 end
