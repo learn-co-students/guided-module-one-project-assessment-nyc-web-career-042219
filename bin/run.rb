@@ -1,8 +1,8 @@
+
 require 'pry'
 require 'rest-client'
 require_relative '../config/environment'
 
-CLI.start
+cli = CLI.new
 
-
-#binding.pry
+cli.start
