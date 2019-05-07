@@ -56,5 +56,19 @@ stats_string = RestClient.get('https://akabab.github.io/superhero-api/api/all.js
 end
 
 def stage
+  stats_string = RestClient.get('https://akabab.github.io/superhero-api/api/all.json')
+  stats_array = JSON.parse(stats_string)
+  sample = stats_array.sample(1)
+  name = sample[0]["name"]
+  int = sample[0]["powerstats"]["intelligence"]
+  str = sample[0]["powerstats"]["strength"]
+  spd = sample[0]["powerstats"]["speed"]
+  dur = sample[0]["powerstats"]["durability"]
+  pwr = sample[0]["powerstats"]["power"]
+  cbt = sample[0]["powerstats"]["combat"]
 
+  Enemy.find_or_create_by(name: name, hp: dur, atk: pwr, def: cbt, speed: spd )
+
+  #give them stat
+  #loop till someone's hp reach 0
 end
