@@ -3,7 +3,7 @@ def welcome
   puts "A bearded wizard appears"
   puts "Bearded Wizard: What the heck? Who are you? Why are you in my special place?"
   puts "Enter your name:"
-  
+
   name = gets.chomp
   user = User.find_or_create_by(name: name)
 
@@ -46,12 +46,7 @@ def confirm(hero_hash, user)
     if input == 'y'
       puts "Bearded Wizard: I guess that's a good choice..."
       #save user's superhero choice and stats
-      user.superhero_name = hero_hash['name']
-      user.hp = hero_hash['powerstats']['durability']
-      user.atk = hero_hash['powerstats']['strength'] + hero_hash['powerstats']['combat']
-      user.def = hero_hash['powerstats']['durability'] + hero_hash['powerstats']['intelligence']
-      user.speed = hero_hash['powerstats']['speed']
-      user.save
+      user.save_stats(hero_hash)
       #call stage
       stage(user)
       break
