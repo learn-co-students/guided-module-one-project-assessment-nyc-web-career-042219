@@ -6,6 +6,8 @@ class CreateEnemies < ActiveRecord::Migration[5.2]
       t.integer :atk
       t.integer :def
       t.integer :speed
+      t.integer :max_hp
+      t.integer :temp_def
     end
   end
 end

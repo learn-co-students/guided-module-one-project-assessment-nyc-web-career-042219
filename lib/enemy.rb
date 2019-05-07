@@ -8,6 +8,8 @@ class Enemy < ActiveRecord::Base
     self.atk = hero_hash['powerstats']['strength']
     self.def = hero_hash['powerstats']['durability']
     self.speed = hero_hash['powerstats']['speed']
+    self.temp_def = 0
+    self.max_hp = hero_hash['powerstats']['durability']
     self.save
   end
 end
