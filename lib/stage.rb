@@ -8,53 +8,54 @@ class Stage < ActiveRecord::Base
     stats_array
   end
 
-  def get_stats(user_or_enemy)
-    stats = []
-    stats_array = grab_data
-    stats_array.each do |hero_hash|
-      if superhero_name == hero_hash['name']
-        user_or_enemy.name = hero_hash['name']
-
-        user_or_enemy.hp = hero_hash['powerstats']['durability']
-        user_or_enemy.atk = hero_hash['powerstats']['strength'] + hero_hash['powerstats']['combat']
-        user_or_enemy.def = hero_hash['powerstats']['durability'] + hero_hash['powerstats']['intelligence']
-        user_or_enemy.speed = hero_hash['powerstats']['speed']
-      end
-    end
-  end
-
   def battle
-  until User.find(self.user_id) < 0 || Enemy.find(self.enemy_id) < 0
-    puts "Please pick an action:\n"
-    puts "1.Attack \n2.Defend \n3.Run away"
-    user_action = gets.chomp
-    if user_action < 1 || user_action > 4
-      puts "Please enter a valid #"
-    elsif user_action == 1
-      attack
-    elsif user_action == 2
-      defend
-    elsif user_action == 3
-      run_away
+    #create an enemy and save to stage
+    enemy = Enemy.new()
+    enemy_hash = get_data.sample(1).first
+    enemy.save_stats(enemy_hash)
+    self.enemy_id = enemy.id
+    self.save
+
+    #print that you're fighting this enemy name
+
+    #find the user
+
+    user = User.find(self.user_id)
+    binding.pry
+    #start battle
+    until user.hp <= 0 || enemy.hp <= 0
+      puts "Please pick an action:\n"
+      puts "1.Attack \n2.Defend \n3.Run away"
+      user_action = gets.chomp.to_i
+      case user_action
+      when 1
+        attack(user, enemy)
+      when 2
+        defend(user, enemy)
+      when 3
+        run_away(user, enemy)
+      else
+        print "Please enter a valid # for action."
+      end
+
+      enemy_move(user, enemy)
     end
 
+    if user.hp <= 0
+      return false
+    else
+      #we need to move stages
+    end
   end
-end
 
-def attack(attacker)
-  if attacker.class == User
-  damage = attacker.atk - Enemy.find(self.enemy_id)
-    if damage < 0
-      damage = 0
-    end
+  def attack(attacker, defender)
+    #maybe implement speed difference to see who goes first
+    #user attacks
+    damage = attacker.atk - defender.def
+    defender.hp -= damage
+
+    print "You did #{damage} to #{defender.name}!"
   end
-  if attacker.class == Enemy
-    damage = attacker.atk - User.find(self.user_id)
-    if damage < 0
-      damage = 0
-    end
-  end
-end
 
 
   def defend #lowers enemy attack and recovers some hp
@@ -62,6 +63,18 @@ end
   end
 
   def run_away
+    print "Bearded Wizard: HAHAHA you think you can run away???"
+  end
 
+  def enemy_move(user, enemy)
+    #enemy random
+    action = rand(10)
+    case action
+    when 0..6
+      #enemy attacks
+      attack(enemy, user)
+    when 7..9
+      #enemy defends
+    end
   end
 end
