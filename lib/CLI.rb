@@ -11,18 +11,31 @@ def welcome
 end
 
 def confirm(hero_hash)
-  puts "Superhero stats - HP: #{hero_hash['powerstats']['durability']}"
-  puts " ATK: #{hero_hash['powerstats']['strength'] + hero_hash['powerstats']['combat']}"
-  puts " DEF: #{hero_hash['powerstats']['durability'] + hero_hash['powerstats']['intelligence']}"
-  puts " SPEED: #{hero_hash['powerstats']['speed']}"
+  puts "#{hero_hash['name']} stats:\n"
+  puts "HP: #{hero_hash['powerstats']['durability']}\n"
+  puts "ATK: #{hero_hash['powerstats']['strength'] + hero_hash['powerstats']['combat']}\n"
+  puts "DEF: #{hero_hash['powerstats']['durability'] + hero_hash['powerstats']['intelligence']}\n"
+  puts "SPEED: #{hero_hash['powerstats']['speed']}\n"
   puts "Bearded Wizard: Oh interesting... are you sure you want to pick this superhero?"
   puts "Type (Y) to confirm or (N) to go back and choose another superhero."
 
-  input = gets.chomp.lowercase
-
+  input = gets.chomp.downcase
+  loop do
+    if input == 'y'
+      #call stage
+      stage
+      break
+    elsif input == 'n'
+      #go back to choose_a_hero
+      choose_a_hero
+      break
+    else
+      puts "Beard Wizard: QUIT MESSING AROUND! TYPE IN Y OR N!"
+    end
+  end
 end
 
-def chose_a_hero
+def choose_a_hero
 stats_string = RestClient.get('https://akabab.github.io/superhero-api/api/all.json')
   stats_array = JSON.parse(stats_string)
   sample = stats_array.sample(5)
