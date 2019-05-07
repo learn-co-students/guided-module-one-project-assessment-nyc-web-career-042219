@@ -41,7 +41,7 @@ def confirm(hero_hash, user)
   puts "HP: #{hero_hash['powerstats']['durability']}\n"
   puts "ATK: #{hero_hash['powerstats']['strength'] + hero_hash['powerstats']['combat']}\n"
   puts "DEF: #{hero_hash['powerstats']['durability'] + hero_hash['powerstats']['intelligence']}\n"
-  puts "SPEED: #{hero_hash['powerstats']['speed']}\n"
+  puts "SPEED: #{hero_hash['powerstats']['speed']}\n\n"
   puts "Bearded Wizard: Oh interesting... are you sure you want to pick this superhero?"
   puts "Type (Y) to confirm or (N) to go back and choose another superhero."
 
@@ -66,29 +66,29 @@ def confirm(hero_hash, user)
 end
 
 def stage(user)
-  print "Bearded Wizard: Well then, it's time to FIGHT TO THE DEATH!"
-  print "STAGE BEGIN!"
+  puts "Bearded Wizard: Well then, it's time to FIGHT TO THE DEATH!"
+  puts "STAGE BEGIN!"
 
   new_stage = Stage.new(user_id: user.id)
   won = new_stage.battle
 
   if won
-    
+
   else
     game_over(user)
   end
 end
 
 def victory(user)
-  print "Bearded Wizard: Woah! You actually won! That's incredible... congrats"
-  print "VICTORY!"
+  puts "Bearded Wizard: Woah! You actually won! That's incredible... congrats"
+  puts "VICTORY!"
 
 end
 
 def game_over(user)
-  print "Bearded Wizard: Heh, figured you lose, nice try"
-  print "Want to try again?"
-  print "Type (Y) to start over and try again or (N) to stop playing"
+  puts "Bearded Wizard: Haha, I knew you'd lose."
+  puts "Want to try again?"
+  puts "Type (Y) to start over and try again or (N) to stop playing"
 
   input = gets.chomp.downcase
   loop do
