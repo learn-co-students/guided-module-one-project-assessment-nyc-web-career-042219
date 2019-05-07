@@ -26,8 +26,7 @@ class CommandLineInterface
     User.find_or_create_by(username: username)
   end
 
-  # TODO: Call on the user model to show other relavent information
-  # TODO: once methods are done.
+  # TODO: Complete UPDATE operations.
   def access_user_info(user)
     puts "#{user.username}\'s Profile"
     puts "Total Number of Questions Answered Correctly: #{user.total_correct}"

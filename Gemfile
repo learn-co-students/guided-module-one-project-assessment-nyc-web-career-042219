@@ -7,3 +7,5 @@ gem "pry"
 gem "require_all"
 gem "faker"
 gem "annotate"
+gem 'rest-client'
+gem 'json'
