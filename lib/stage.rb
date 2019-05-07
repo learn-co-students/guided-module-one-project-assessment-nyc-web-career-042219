@@ -34,9 +34,10 @@ class Stage < ActiveRecord::Base
       when 3
         run_away(user, enemy)
       else
-        print "Please enter a valid # for action."
+        puts "Please enter a valid # for action."
       end
 
+      sleep(2)
       enemy_move(user, enemy)
     end
 
@@ -56,7 +57,7 @@ class Stage < ActiveRecord::Base
     end
     defender.hp -= damage
 
-    print "#{attacker.name} did #{damage} to #{defender.name}!"
+    puts "#{attacker.name} did #{damage} to #{defender.name}!"
   end
 
 
@@ -65,7 +66,7 @@ class Stage < ActiveRecord::Base
   end
 
   def run_away
-    print "Bearded Wizard: HAHAHA you think you can run away???"
+    puts "Bearded Wizard: HAHAHA you think you can run away???"
   end
 
   def enemy_move(user, enemy)
