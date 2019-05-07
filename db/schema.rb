@@ -18,11 +18,14 @@ ActiveRecord::Schema.define(version: 2019_05_06_183224) do
     t.integer "atk"
     t.integer "def"
     t.integer "speed"
+    t.integer "max_hp"
+    t.integer "temp_def"
   end
 
   create_table "stages", force: :cascade do |t|
     t.integer "user_id"
     t.integer "enemy_id"
+    t.integer "level"
   end
 
   create_table "users", force: :cascade do |t|
@@ -33,6 +36,8 @@ ActiveRecord::Schema.define(version: 2019_05_06_183224) do
     t.integer "atk"
     t.integer "def"
     t.integer "speed"
+    t.integer "temp_def"
+    t.integer "max_hp"
     t.integer "stage_level"
   end
 

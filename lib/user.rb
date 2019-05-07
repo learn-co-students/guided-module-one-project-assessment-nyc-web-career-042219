@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
     self.atk = hero_hash['powerstats']['strength'] + hero_hash['powerstats']['combat']
     self.def = hero_hash['powerstats']['durability'] + hero_hash['powerstats']['intelligence']
     self.speed = hero_hash['powerstats']['speed']
+    self.temp_def = 0
+    self.max_hp = hero_hash['powerstats']['durability']
     self.save
   end
 

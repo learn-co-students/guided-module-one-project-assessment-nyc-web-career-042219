@@ -67,22 +67,30 @@ end
 
 def stage(user)
   puts "Bearded Wizard: Well then, it's time to FIGHT TO THE DEATH!"
-  puts "STAGE BEGIN!"
 
-  new_stage = Stage.new(user_id: user.id)
-  won = new_stage.battle
+  count = 1
+  while count < 5
+    puts "STAGE #{count} BEGIN!"
+    new_stage = Stage.new(user_id: user.id, level: count)
+    result = new_stage.battle
 
-  if won
-
-  else
-    game_over(user)
+    if result
+      #loop for new stage
+      count += 1
+    else
+      game_over(user)
+      break
+    end
   end
+
+  victory
 end
 
-def victory(user)
+def victory
   puts "Bearded Wizard: Woah! You actually won! That's incredible... congrats"
   puts "VICTORY!"
 
+  Catpix::print_image "winner.jpg", center_x: true, limit_y: 1
 end
 
 def game_over(user)
