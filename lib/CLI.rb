@@ -32,6 +32,11 @@ def choose_a_hero(user)
 end
 
 def confirm(hero_hash, user)
+  #test catpix
+  show_picture(hero_hash)
+  #put delay
+  sleep(1)
+
   puts "#{hero_hash['name']} stats:\n"
   puts "HP: #{hero_hash['powerstats']['durability']}\n"
   puts "ATK: #{hero_hash['powerstats']['strength'] + hero_hash['powerstats']['combat']}\n"
@@ -46,8 +51,6 @@ def confirm(hero_hash, user)
       puts "Bearded Wizard: I guess that's a good choice..."
       #save user's superhero choice and stats
       user.save_stats(hero_hash)
-      #test catpix
-      show_picture(hero_hash)
       #call stage
       stage(user)
       break
@@ -57,6 +60,7 @@ def confirm(hero_hash, user)
       break
     else
       print "Beard Wizard: QUIT MESSING AROUND! TYPE IN Y OR N!"
+      input = gets.chomp.downcase
     end
   end
 end
@@ -65,11 +69,11 @@ def stage(user)
   print "Bearded Wizard: Well then, it's time to FIGHT TO THE DEATH!"
   print "STAGE BEGIN!"
 
-  new_stage = Stage.new(user: user)
+  new_stage = Stage.new(user_id: user.id)
   won = new_stage.battle
 
   if won
-    victory(user)
+    
   else
     game_over(user)
   end
@@ -98,8 +102,14 @@ def game_over(user)
 end
 
 def show_picture(hero_hash)
+  hero_url = hero_hash['images']['lg']
+  download_image(hero_url)
 
-  test_pic = hero_hash['images']['sm']
+  Catpix::print_image hero_url.split('/').last, center_x: true, limit_y: 1
+end
 
-  binding.pry
+def download_image(url)
+  open(url) do |u|
+    File.open(url.split('/').last, 'wb') {|f| f.write(u.read)}
+  end
 end

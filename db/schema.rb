@@ -14,10 +14,10 @@ ActiveRecord::Schema.define(version: 2019_05_06_183224) do
 
   create_table "enemies", force: :cascade do |t|
     t.string "name"
-    t.string "hp"
-    t.string "atk"
-    t.string "def"
-    t.string "speed"
+    t.integer "hp"
+    t.integer "atk"
+    t.integer "def"
+    t.integer "speed"
   end
 
   create_table "stages", force: :cascade do |t|
