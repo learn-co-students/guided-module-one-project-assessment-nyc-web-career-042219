@@ -1,14 +1,8 @@
-require 'Pry'
+require 'pry'
+require 'rest-client'
 require_relative '../config/environment'
 
-def greeting
-  puts "Welcome to Adam, Jake, and Oscar's movie selector! Please select a genre you'd like to to search for:"
-end
+CLI.start
 
-def get_user_input
-  user_input = gets.chomp
-end
 
-greeting
-get_user_input
-binding.pry
+#binding.pry
