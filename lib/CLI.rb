@@ -1,4 +1,4 @@
-def welcome
+def start
   puts "You entered a dark room..."
   puts "A bearded wizard appears"
   puts "Bearded Wizard: What the heck? Who are you? Why are you in my special place?"
@@ -46,6 +46,8 @@ def confirm(hero_hash, user)
       puts "Bearded Wizard: I guess that's a good choice..."
       #save user's superhero choice and stats
       user.save_stats(hero_hash)
+      #test catpix
+      show_picture(hero_hash)
       #call stage
       stage(user)
       break
@@ -93,4 +95,11 @@ def game_over(user)
       break
     end
   end
+end
+
+def show_picture(hero_hash)
+
+  test_pic = hero_hash['images']['sm']
+
+  binding.pry
 end
