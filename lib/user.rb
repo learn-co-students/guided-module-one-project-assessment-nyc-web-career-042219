@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   belongs_to :stage
   has_many :enemies, through: :stages
 
-  def user_stats(hero_hash)
+  def save_stats(hero_hash)
     self.superhero_name = hero_hash['name']
     self.hp = hero_hash['powerstats']['durability']
     self.atk = hero_hash['powerstats']['strength'] + hero_hash['powerstats']['combat']

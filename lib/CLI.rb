@@ -21,8 +21,7 @@ def choose_a_hero(user)
   loop do
     puts "Please pick one of the following:\n"
     puts "1.#{sample_heroes[0]["name"]} \n2.#{sample_heroes[1]["name"]} \n3.#{sample_heroes[2]["name"]} \n4.#{sample_heroes[3]["name"]} \n5.#{sample_heroes[4]["name"]}"
-    num = gets.chomp
-    num = num.to_i
+    num = gets.chomp.to_i
     if num < 1 || num > 5
       puts "Please enter a valid #"
     else
@@ -62,7 +61,7 @@ end
 
 def stage(user)
   print "Bearded Wizard: Well then, it's time to FIGHT TO THE DEATH!"
-  print "STAGE #{stage_number} BEGIN!"
+  print "STAGE BEGIN!"
 
   new_stage = Stage.new(user: user)
   won = new_stage.battle
