@@ -1,5 +1,4 @@
 class CreateVenues < ActiveRecord::Migration[4.2]
-  has_many :users, through: :tickets
 
   def change
     create_table :venues do |t|
