@@ -24,7 +24,21 @@ class Stage < ActiveRecord::Base
   end
 
   def battle
+    until User.find(self.user_id) < 0 || Enemy.find(self.enemy_id) < 0
+      puts "Please pick an action:\n"
+      puts "1.Attack \n2.Defend \n3.Run away"
+      user_action = gets.chomp
+      if user_action < 1 || user_action > 4
+        puts "Please enter a valid #"
+      elsif user_action == 1
+        attack
+      elsif user_action == 2
+        defend
+      elsif user_action == 3
+        run_away
+      end
 
+    end
   end
 
   def attack
