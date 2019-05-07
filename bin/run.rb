@@ -1,3 +1,8 @@
+require 'pry'
+require 'rest-client'
 require_relative '../config/environment'
 
-puts "hello world"
+CLI.start
+
+
+#binding.pry
