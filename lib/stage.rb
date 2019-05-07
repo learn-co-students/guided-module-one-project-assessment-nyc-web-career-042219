@@ -21,7 +21,6 @@ class Stage < ActiveRecord::Base
     #find the user
 
     user = User.find(self.user_id)
-    binding.pry
     #start battle
     until user.hp <= 0 || enemy.hp <= 0
       puts "Please pick an action:\n"
@@ -52,9 +51,12 @@ class Stage < ActiveRecord::Base
     #maybe implement speed difference to see who goes first
     #user attacks
     damage = attacker.atk - defender.def
+    if damage < 0
+      damage = 0
+    end
     defender.hp -= damage
 
-    print "You did #{damage} to #{defender.name}!"
+    print "#{attacker.name} did #{damage} to #{defender.name}!"
   end
 
 

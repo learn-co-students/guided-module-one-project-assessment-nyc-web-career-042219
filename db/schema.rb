@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2019_05_06_183224) do
     t.integer "atk"
     t.integer "def"
     t.integer "speed"
+    t.integer "stage_level"
   end
 
 end
