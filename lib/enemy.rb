@@ -9,6 +9,7 @@ class Enemy < ActiveRecord::Base
       def: hero_hash['powerstats']['durability'],
       speed: hero_hash['powerstats']['speed'],
       temp_def: 0,
-      max_hp: hero_hash['powerstats']['durability'])
+      max_hp: hero_hash['powerstats']['durability'],
+      picture_url: hero_hash['images']['lg'])
   end
 end

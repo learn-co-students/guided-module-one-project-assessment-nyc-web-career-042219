@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2019_05_06_183224) do
     t.integer "speed"
     t.integer "max_hp"
     t.integer "temp_def"
+    t.string "picture_url"
   end
 
   create_table "stages", force: :cascade do |t|
@@ -38,7 +39,7 @@ ActiveRecord::Schema.define(version: 2019_05_06_183224) do
     t.integer "speed"
     t.integer "temp_def"
     t.integer "max_hp"
-    t.integer "stage_level"
+    t.string "picture_url"
   end
 
 end

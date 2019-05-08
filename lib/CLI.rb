@@ -31,7 +31,14 @@ class CLI
     puts "Enter your name:"
 
     name = gets.chomp
-    user = User.find_or_create_by(name: name)
+    #first check if user already exists to kick them back to title screen
+    user = User.find_by(name: name)
+    if user == nil
+      user = User.create(name: name)
+    else
+      puts "\nBearded Wizard: HEY! You already been here before. Continue your old game.\n\n"
+      return title_screen
+    end
 
     choose_a_hero(user)
   end
@@ -57,9 +64,9 @@ class CLI
   end
 
   def confirm(hero_hash, user)
-    hero_url = hero_hash['images']['md']
-    download_image(hero_url)
-    print_picture(hero_url.split('/').last)
+    # hero_url = hero_hash['images']['lg']
+    # download_image(hero_url)
+    # print_picture(hero_url.split('/').last)
 
     puts "#{hero_hash['name']} stats:"
     puts "HP: #{hero_hash['powerstats']['durability']}"
@@ -92,41 +99,63 @@ class CLI
   def start_stage(user)
     puts "Bearded Wizard: Well then, it's time to FIGHT TO THE DEATH!"
 
-    count = user.stage_level
-    until count == 5
-      puts "\nSTAGE #{count} BEGIN!"
-      puts "A challenger appears..."
-      #create enemy and save to stage
+    stage = Stage.find_by(user_id: user.id)
+
+    if stage == nil
+      stage = Stage.create(user_id: user.id, level: 1)
       enemy = Enemy.new()
       enemy_hash = get_data.sample(1).first
       enemy.save_stats(enemy_hash)
+      stage.update(enemy_id: enemy.id)
+    else
+      #continue part
+      #put out our hero name and stats
+      puts "Continuing with #{user.superhero_name}."
+      # download_image(user.picture_url)
+      # print_picture(user.picture_url.split('/').last)
+      sleep(2)
+
+      #grab enemy data to set up continuing stage
+      enemy_id = Stage.find_by(user_id: user.id).enemy_id
+      enemy = Enemy.find(enemy_id)
+    end
+
+    count = stage.level
+    until count == 5
+      puts "\nSTAGE #{count} BEGIN!"
+      puts "A challenger appears..."
 
       #print that you're fighting this enemy name
-      enemy_url = enemy_hash['images']['md']
-      download_image(enemy_url)
-      print_picture(enemy_url.split('/').last)
+      # download_image(enemy.picture_url)
+      # print_picture(enemy.picture_url.split('/').last)
 
-      #create Stage and start battle
-      stage = Stage.find_or_create_by(user_id: user.id, enemy_id: enemy.id, level: count)
+      #start battle
       result = start_battle(stage)
 
       if result
         #loop for new stage but wait 2 seconds before starting
+        #need to create new enemy
+        enemy = Enemy.new()
+        enemy_hash = get_data.sample(1).first
+        enemy.save_stats(enemy_hash)
+        stage.update(enemy_id: enemy.id)
+
         sleep(2)
         count += 1
-        user.update(stage_level: count)
+        stage.update(level: count)
         #if we're on stage 5 you won!
         if count == 5
-          victory
-          user.update(stage_level: 1)
+          victory(user)
           break
         end
       else
-        user.update(stage_level: 1)
-        game_over
+        game_over(user)
         break
       end
     end
+
+    #win or lose delete stage data
+    stage.delete_by_user_id(user.id)
   end
 
   def start_battle(stage)
@@ -168,20 +197,20 @@ class CLI
     end
   end
 
-  def victory
+  def victory(user)
     puts "\nBearded Wizard: Woah! You actually won! That's incredible... congrats"
     print_picture("winner.jpg")
 
-    play_again?
+    play_again?(user)
   end
 
-  def game_over
+  def game_over(user)
     puts "\nBearded Wizard: Haha, I knew you'd lose."
 
-    play_again?
+    play_again?(user)
   end
 
-  def play_again?
+  def play_again?(user)
     puts "Want to play again?"
     puts "Type (Y) to start over and try again or (N) to stop playing"
 
@@ -192,6 +221,8 @@ class CLI
         break
       elsif input == 'n'
         break
+      else
+        puts "Type (Y) to start over and try again or (N) to stop playing"
       end
     end
   end

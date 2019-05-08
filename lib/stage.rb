@@ -84,4 +84,9 @@ class Stage < ActiveRecord::Base
       return 1
     end
   end
+
+  def delete_by_user_id(user_id)
+    stage_id = Stage.find_by(user_id: user_id).id
+    Stage.delete(stage_id)
+  end
 end

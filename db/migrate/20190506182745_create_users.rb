@@ -10,7 +10,7 @@ class CreateUsers < ActiveRecord::Migration[5.2]
       t.integer :speed
       t.integer :temp_def
       t.integer :max_hp
-      t.integer :stage_level
+      t.string :picture_url
     end
   end
 end
