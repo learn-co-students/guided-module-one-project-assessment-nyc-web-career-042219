@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 4) do
   create_table "tickets", force: :cascade do |t|
     t.string "user_id"
     t.string "venue_id"
+    t.string "band_name"
   end
 
   create_table "users", force: :cascade do |t|

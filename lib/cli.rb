@@ -6,7 +6,7 @@ require 'json'
 
   def greet
     puts 'Welcome to Ticket Pick!'
-    puts 'Would you like to Share or Search for a ticket?'
+    puts 'Would you like to Post a ticket or Search for what\'s out there?'
     user_input = gets.chomp
     if user_input.downcase == "search"
       puts "Choose by venue or user:"
@@ -15,27 +15,25 @@ require 'json'
         puts "Choose by Name:"
         venue_input = gets.chomp
         venue_input = Venue.all.find_by(name: venue_input)
-
       end
-      #list of users
-      user_input = gets.chomp
-
-
-    elsif user_input.downcase == "share"
-      puts
-
+      venue_input.
     end
+  end
+
+
+    # elsif user_input.downcase == "share"
+    #   puts
+    #
+    # end
 
     #list of venues
     #list of users
 
-    # user = User.find_or_create_by(name: username)
-
-    response = RestClient.get("https://api.songkick.com/api/3.0/artists/379603/gigography.json?apikey=nu80rqJInvFVVDU4")
-    string = response.body
-    data = JSON.parse(string)
-    binding.pry
-  end
+  #   response = RestClient.get("https://api.songkick.com/api/3.0/artists/379603/gigography.json?apikey=nu80rqJInvFVVDU4")
+  #   string = response.body
+  #   data = JSON.parse(string)
+  #   binding.pry
+  # end
 
 
 
