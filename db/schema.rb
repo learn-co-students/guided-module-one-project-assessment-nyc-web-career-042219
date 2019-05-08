@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 3) do
+ActiveRecord::Schema.define(version: 4) do
 
   create_table "tickets", force: :cascade do |t|
     t.string "user_id"
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 3) do
     t.string "location"
     t.integer "age"
     t.string "gender"
-    t.string "relationship_status"
+    t.boolean "relationship_status"
   end
 
   create_table "venues", force: :cascade do |t|

@@ -1,3 +1,4 @@
+
 gavin = User.find_or_create_by(name: "Gavin O\'Connor", location: "Brooklyn, NY", age: 36, gender: "male", relationship_status: "engaged")
 julie = User.find_or_create_by(name: "Julie Zeltser", location: "Brooklyn, NY", age: 34, gender: "female", relationship_status: "engaged")
 brian = User.find_or_create_by(name: "Brian Ponto", location: "Brooklyn, NY", age: 36, gender: "male", relationship_status: "married")
@@ -22,3 +23,4 @@ descendants = Ticket.find_or_create_by(user_id: User.all.sample.id, venue_id: Ve
 skeletonwitch = Ticket.find_or_create_by(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "Skeletonwitch")
 samiam = Ticket.find_or_create_by(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "Samiam")
 weapons = Ticket.find_or_create_by(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "Primitive Weapons")
+
