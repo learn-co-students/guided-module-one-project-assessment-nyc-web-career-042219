@@ -60,7 +60,7 @@ class CLI
        movie_search
     elsif input == '2'
       puts "Let's look at your movies and reviews."
-      # my_movie_list method
+      format_movie_list
     elsif input == '3'
       # work_in_progress method
     else
@@ -97,11 +97,11 @@ class CLI
 
     new_input = input.to_i - 1
       movie_title = ""
-    movie_results.each do |movie|
-      if movie_results.index(movie) == new_input
-        movie_title = movie
+      movie_results.each do |movie|
+        if movie_results.index(movie) == new_input
+          movie_title = movie
+        end
       end
-    end
     find_movie_by_title(movie_title)
   end
 
@@ -117,10 +117,41 @@ class CLI
   end
 
   def add_movie_to_database(hash)
-    Movie.find_or_create_by(title: hash["Title"],
-      release_year: hash["Released"],
-      genre: hash["Genre"],
-      director: hash["Director"])
+  movie_object =  Movie.find_or_create_by(title: hash["Title"],
+                  release_year: hash["Released"],
+                  genre: hash["Genre"],
+                  director: hash["Director"])
+      add_movie_to_mylist(movie_object)
+  end
+
+  def add_movie_to_mylist(movie_object)
+    puts "Do you want to add this movie to your list?(y/n)"
+    input = gets.chomp
+    if input == "y"
+      List.find_or_create_by(user_id: @user.id, movie_id: movie_object.id )
+      format_movie_list
+    elsif input == "n"
+      movie_search
+    else
+      puts "Please enter a valid response."
+        add_movie_to_mylist(movie_object)
+    end
+  end
+
+  def get_movie_list
+    movie_list = List.all.select do |movie|
+      movie.user_id == @user.id
+    end
+    movie_list
+  end
+
+  def format_movie_list
+     movie_names = get_movie_list.map do |movielist|
+       Movie.all.find(movielist.movie_id).title
+     end
+     formatted_movie_names = movie_names.each.with_index(1).map do |movie, index|
+      puts "#{index}. #{movie}"
+     end
   end
 
 end
