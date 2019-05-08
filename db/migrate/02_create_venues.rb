@@ -5,6 +5,7 @@ class CreateVenues < ActiveRecord::Migration[4.2]
       t.string :name
       t.string :location
       t.boolean :family_friendly
+      t.string :band_name
     end
   end
 end
