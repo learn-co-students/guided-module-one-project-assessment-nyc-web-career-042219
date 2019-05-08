@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 3) do
     t.string "name"
     t.string "location"
     t.boolean "family_friendly"
+    t.string "band_name"
   end
 
 end
