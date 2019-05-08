@@ -168,14 +168,27 @@ class CLI
       end
     end
     selected_movie
-    binding.pry
+
     act_on_selected_movie(selected_movie)
   end
 
   def act_on_selected_movie(selected_movie) #this method it the movie list MENU that allows the user to select the action the way to take
-    puts "#{selected_movie.title}"
+    puts "You have selected: #{selected_movie.title}"
     #puts "Please select the action you'd like to take: 1) Write a Review"
-    write_a_review(selected_movie)
+    puts "If you would like to rate and review - press 1"
+    puts "To view your review - press 2"
+    puts "Or to go back to main menu - press 3"
+    input = gets.chomp
+      if input == "1"
+        write_a_review(selected_movie)
+      elsif input == "2"
+        view_review(selected_movie)
+      elsif input == "3"
+        main_menu_options
+      else
+        puts "Please enter a valid option"
+        act_on_selected_movie(selected_movie)
+      end
   end
 
   def write_a_review(movie)
@@ -192,4 +205,29 @@ class CLI
     #binding.pry
   end
 
-end
+  def view_review(arg)
+    binding.pry
+    if arg.rating == nil
+      puts "You have not rated/review this movie."
+      write_a_review(arg)
+    else
+      puts "You gave this movie the following rating: #{arg.rating}"
+      puts "You gave this movie the following review:"
+      puts "{arg.review}"
+      puts "Would you like to update your rating/review? y/n"
+      write_a_review(arg)
+    end
+    new_input = gets.chomp
+    case new_input
+    when "y"
+      write_a_review(arg)
+    when "n"
+      main_menu_options()
+    else
+      view_review(arg)
+      #this will send them back to the beginning
+      end
+
+    end
+
+  end
