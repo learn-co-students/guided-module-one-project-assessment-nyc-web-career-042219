@@ -2,4 +2,5 @@ require_relative '../config/environment'
 
 ActiveRecord::Base.logger = nil
 
-title_screen
+game = CLI.new()
+game.title_screen

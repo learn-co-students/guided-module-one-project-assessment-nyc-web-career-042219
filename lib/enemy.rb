@@ -3,13 +3,12 @@ class Enemy < ActiveRecord::Base
   has_many :users, through: :stages
 
   def save_stats(hero_hash)
-    self.name = hero_hash['name']
-    self.hp = hero_hash['powerstats']['durability']
-    self.atk = hero_hash['powerstats']['strength']
-    self.def = hero_hash['powerstats']['durability']
-    self.speed = hero_hash['powerstats']['speed']
-    self.temp_def = 0
-    self.max_hp = hero_hash['powerstats']['durability']
-    self.save
+    self.update(name: hero_hash['name'],
+      hp: hero_hash['powerstats']['durability'],
+      atk: hero_hash['powerstats']['strength'],
+      def: hero_hash['powerstats']['durability'],
+      speed: hero_hash['powerstats']['speed'],
+      temp_def: 0,
+      max_hp: hero_hash['powerstats']['durability'])
   end
 end

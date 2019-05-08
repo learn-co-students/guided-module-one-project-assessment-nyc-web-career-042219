@@ -2,28 +2,12 @@ class Stage < ActiveRecord::Base
   has_many :users
   has_many :enemies
 
-  def get_data
-    stats_string = RestClient.get('https://akabab.github.io/superhero-api/api/all.json')
-    stats_array = JSON.parse(stats_string)
-    stats_array
-  end
-
   def battle
-    #create an enemy and save to stage
-    enemy = Enemy.new()
-    enemy_hash = get_data.sample(1).first
-    enemy.save_stats(enemy_hash)
-    self.update(enemy_id: enemy.id)
-
-    #print that you're fighting this enemy name
-    enemy_url = enemy_hash['images']['md']
-    download_image(enemy_url)
-    print_picture(enemy_url.split('/').last)
-    puts "\n#{enemy.name} entered the room looking to fight you."
-
-    #find the user
+    #find user and enemy
     user = User.find(self.user_id)
+    enemy = Enemy.find(self.enemy_id)
 
+    puts "\n#{enemy.name} entered the room looking to fight you."
     #start battle
     until user.hp <= 0 || enemy.hp <= 0
       #initialize temp def for defend action
@@ -33,7 +17,7 @@ class Stage < ActiveRecord::Base
       #grab enemy input
       enemy_input = enemy_move
 
-      puts "Please pick an action:"
+      puts "\nPlease pick an action:"
       puts "1.Attack \n2.Defend \n3.Run away\n4.Quit"
       user_input = gets.chomp.to_i
 
@@ -69,9 +53,9 @@ class Stage < ActiveRecord::Base
     when 1
       attack(user, enemy)
       first = false
+      return if enemy.hp <= 0
     when 2
-      defend(user)
-      first = false
+      defend(user); first = false
     end
 
     if enemy_input == 0 && !first #if enemy attacks
