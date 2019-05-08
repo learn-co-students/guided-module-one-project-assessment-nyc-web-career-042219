@@ -63,7 +63,7 @@ class CommandLineInterface
     User.find_or_create_by(username: username)
   end
 
-  # TODO: Complete UPDATE operations.
+  # * Puts several pieces of information about the current user.
   def access_user_info(user)
     puts "#{user.username}'s Profile"
     puts "Total Number of Questions Answered Correctly: #{user.total_correct}"
