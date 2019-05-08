@@ -40,7 +40,7 @@ class CLI
     name_input = gets.chomp
     actual_user = User.find_by(name: name_input)
     if !actual_user
-      put "we could not find that user name. Please try again."
+      puts "we could not find that user name. Please try again."
       find_user
     else
       puts "Welcome back, #{actual_user.name}! Let's go the main menu"
@@ -55,24 +55,53 @@ class CLI
     puts "3. View your friends or search for friends - work in progress."
     puts "Please input the number corresponding to your choice."
     input = gets.chomp
-    case input
-    when 1
+    if input == '1'
       puts "Let's look at some movies."
        movie_search
-    when 2
+    elsif input == '2'
       puts "Let's look at your movies and reviews."
       # my_movie_list method
-    when 3
+    elsif input == '3'
       # work_in_progress method
     else
       "Please select a valid option"
-      main_menu_options
+
     end
   end
 
   def movie_search
-    
+    puts "Please enter the name of the movie you would like to search"
+    input = gets.chomp
 
+    query_response = RestClient.get("http://www.omdbapi.com/?s=#{input}&apikey=a2d3299b")
+
+    parsed_response = JSON.parse(query_response)
+
+    movie_results = parsed_response["Search"].map do |movie|
+      movie["Title"]
+    end
+    puts "Your search returned the following results:"
+
+    movie_results.each.with_index(1).map do |movie, index|
+      puts "#{index}. #{movie}"
+    end
+    find_movie_from_list(movie_results)
+  end
+
+
+
+  def find_movie_from_list(movie_results)
+    #binding.pry
+    puts "Please select the number of the movie you'd like to add to your list"
+    input = gets.chomp
+
+    new_input = input.to_i - 1
+
+    movie_results.each do |movie|
+      if movie_results.index(movie) == new_input
+        puts movie
+      end
+    end
   end
 
 end
