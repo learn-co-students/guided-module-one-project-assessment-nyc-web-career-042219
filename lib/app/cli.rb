@@ -128,7 +128,7 @@ class CLI
     puts "Do you want to add this movie to your list?(y/n)"
     input = gets.chomp
     if input == "y"
-      List.find_or_create_by(user_id: @user.id, movie_id: movie_object.id )
+      List.find_or_create_by(user_id: @user.id, movie_id: movie_object.id, title: movie_object.title )
       format_movie_list
     elsif input == "n"
       movie_search
@@ -145,13 +145,51 @@ class CLI
     movie_list
   end
 
-  def format_movie_list
+  def format_movie_list #this method formats the users list of movies with a number next to the movie title
      movie_names = get_movie_list.map do |movielist|
        Movie.all.find(movielist.movie_id).title
      end
      formatted_movie_names = movie_names.each.with_index(1).map do |movie, index|
       puts "#{index}. #{movie}"
      end
+     select_movie_from_list_menu
+  end
+
+  def select_movie_from_list_menu #this method allows a user to select a movie from the number next to its title
+    movie_list = get_movie_list
+    puts "please select the movie number of the movie you'd like to rate and review"
+
+    selected_movie = ""
+    input = gets.chomp
+    new_input = input.to_i - 1
+    movie_list.each do |movielist|
+      if movie_list.index(movielist) == new_input
+        selected_movie = movielist
+      end
+    end
+    selected_movie
+    binding.pry
+    act_on_selected_movie(selected_movie)
+  end
+
+  def act_on_selected_movie(selected_movie) #this method it the movie list MENU that allows the user to select the action the way to take
+    puts "#{selected_movie.title}"
+    #puts "Please select the action you'd like to take: 1) Write a Review"
+    write_a_review(selected_movie)
+  end
+
+  def write_a_review(movie)
+    puts "Please select the rating you'd like to give this movie, from 1 - 10"
+    input = gets.chomp
+    updated_rating = input.to_i
+    movie.rating = updated_rating
+
+    puts "Please write a review for this movie"
+    input = gets.chomp
+
+    movie.review = input
+    movie.save
+    #binding.pry
   end
 
 end
