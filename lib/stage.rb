@@ -26,12 +26,14 @@ class Stage < ActiveRecord::Base
 
     #start battle
     until user.hp <= 0 || enemy.hp <= 0
+      #initialize temp def for defend action
       user.temp_def = 0
       enemy.temp_def = 0
 
+      #grab enemy input
       enemy_input = enemy_move
 
-      puts "Please pick an action:\n"
+      puts "Please pick an action:"
       puts "1.Attack \n2.Defend \n3.Run away\n4.Quit"
       user_input = gets.chomp.to_i
 
@@ -56,20 +58,23 @@ class Stage < ActiveRecord::Base
   end
 
   def who_goes_first(user, enemy, user_input, enemy_input)
-    if enemy_input == 1 #if enemy defends
+    first = true
+    if user_input == 3
+      run_away(user, enemy)
+    elsif enemy_input == 1 #if enemy defends
       defend(enemy)
     end
 
     case user_input
     when 1
       attack(user, enemy)
+      first = false
     when 2
       defend(user)
-    when 3
-      run_away(user, enemy)
+      first = false
     end
 
-    if enemy_input == 0 #if enemy attacks
+    if enemy_input == 0 && !first #if enemy attacks
       attack(enemy, user)
     end
   end
@@ -101,7 +106,7 @@ class Stage < ActiveRecord::Base
   end
 
   def run_away(user, enemy)
-    puts "Bearded Wizard: HAHAHA you think you can run away???"
+    puts "\nBearded Wizard: HAHAHA you think you can run away???"
 
     #chance to die cause you tried to run
     die_chance = rand(100)
