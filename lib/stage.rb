@@ -13,18 +13,17 @@ class Stage < ActiveRecord::Base
     enemy = Enemy.new()
     enemy_hash = get_data.sample(1).first
     enemy.save_stats(enemy_hash)
-    self.enemy_id = enemy.id
-    self.save
+    self.update(enemy_id: enemy.id)
 
     #print that you're fighting this enemy name
-    enemy_url = enemy_hash['images']['lg']
+    enemy_url = enemy_hash['images']['md']
     download_image(enemy_url)
     print_picture(enemy_url.split('/').last)
-    puts "#{enemy.name} entered the room looking to fight you."
+    puts "\n#{enemy.name} entered the room looking to fight you."
 
     #find the user
-
     user = User.find(self.user_id)
+
     #start battle
     until user.hp <= 0 || enemy.hp <= 0
       user.temp_def = 0
@@ -36,16 +35,22 @@ class Stage < ActiveRecord::Base
       puts "1.Attack \n2.Defend \n3.Run away\n4.Quit"
       user_input = gets.chomp.to_i
 
+      until user_input > 0 && user_input < 5
+        puts "Please enter a valid # for action."
+        user_input = gets.chomp.to_i
+      end
+
       exit if user_input == 4
 
       who_goes_first(user, enemy, user_input, enemy_input)
+      sleep(1)
     end
 
     if user.hp <= 0
       return false
     else
       #we need to move stages
-      puts "YOU WON!"
+      puts "\nBearded Wizard: Wow! You beat #{enemy.name}!"
       return true
     end
   end
@@ -62,8 +67,6 @@ class Stage < ActiveRecord::Base
       defend(user)
     when 3
       run_away(user, enemy)
-    else
-      puts "Please enter a valid # for action."
     end
 
     if enemy_input == 0 #if enemy attacks
@@ -80,18 +83,19 @@ class Stage < ActiveRecord::Base
     end
     defender.hp -= damage
 
-    puts "#{attacker.name} did #{damage} to #{defender.name}!"
+    puts "\n#{attacker.name} did #{damage} damage to #{defender.name}!"
     puts "#{defender.name} has #{defender.hp} HP left!"
+    sleep(1)
   end
 
 
   def defend(attacker) #lowers enemy attack and recovers some hp
     attacker.temp_def = (rand(25) + 6)
     if attacker.class == User
-      puts "You defended... like a coward."
+      puts "\nYou defended... like a coward."
       puts "But you actually increased your defense by #{attacker.temp_def}."
     elsif attacker.class == Enemy
-      puts "#{attacker.name} put defenses up!"
+      puts "\n#{attacker.name} put defenses up!"
       puts "#{attacker.name} increased defense by #{attacker.temp_def}."
     end
   end
@@ -113,11 +117,11 @@ class Stage < ActiveRecord::Base
 
   def enemy_move
     #enemy random
-    action = rand(10)
+    action = rand(20)
     case action
-    when 0..6
+    when 0..14
       return 0
-    when 7..9
+    when 15..19
       return 1
     end
   end
