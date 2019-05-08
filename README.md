@@ -4,6 +4,11 @@ A terminal command line turn base fighting game made in Ruby
 
 ## Introduction
 
+This is a turn based fighting game with your favorite superheroes. Win 5 battle to finish this game.
+Please follow the Prerequisites and installing below to get the required tools to run this progarm.
+Once everything is prepare you can run this game just by typing ruby ./bin/run.rb
+
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
