@@ -1,6 +1,4 @@
 def title_screen
-  print_picture("title.png")
-
   loop do
     puts "Welcome to Super Heroes Arena"
     puts "1.New Game \n2.Continue \n3.Exit"
@@ -34,6 +32,7 @@ def start
 
   puts "Bearded Wizard: So... for some reason you have entered the Superhero Fighting Arena"
   puts "Bearded Wizard: CHOOSE YOUR SUPERHERO AND FIGHT TO THE DEATH or to the end of the stages."
+  puts "Bearded Wizard: You'll be given a choice between 5 random superheroes."
 
   choose_a_hero(user)
 end
@@ -44,7 +43,7 @@ def choose_a_hero(user)
   sample_heroes = stats_array.sample(5)
 
   loop do
-    puts "Please pick one of the following:\n"
+    puts "Please pick one of the following:"
     puts "1.#{sample_heroes[0]["name"]} \n2.#{sample_heroes[1]["name"]} \n3.#{sample_heroes[2]["name"]} \n4.#{sample_heroes[3]["name"]} \n5.#{sample_heroes[4]["name"]}"
     num = gets.chomp.to_i
     if num < 1 || num > 5
@@ -57,8 +56,7 @@ def choose_a_hero(user)
 end
 
 def confirm(hero_hash, user)
-  #test catpix
-  hero_url = hero_hash['images']['lg']
+  hero_url = hero_hash['images']['md']
   download_image(hero_url)
   print_picture(hero_url.split('/').last)
   #put delay
@@ -96,8 +94,8 @@ def stage(user)
   puts "Bearded Wizard: Well then, it's time to FIGHT TO THE DEATH!"
 
   count = user.stage_level
-  while count < 5
-    puts "STAGE #{count} BEGIN!"
+  while count < 6
+    puts "\nSTAGE #{count} BEGIN!"
     new_stage = Stage.find_or_create_by(user_id: user.id, level: count)
     result = new_stage.battle
 
@@ -105,10 +103,15 @@ def stage(user)
       #loop for new stage
       count += 1
       user.update(stage_level: count)
-      sleep(1)
+      sleep(2)
 
-      victory if count > 5
+      if count == 5
+        victory
+        user.update(stage_level: 1)
+        break
+      end
     else
+      user.update(stage_level: 1)
       game_over(user)
       break
     end
