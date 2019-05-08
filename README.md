@@ -5,7 +5,7 @@ A terminal command line turn base fighting game made in Ruby
 ## Introduction
 
 This is a turn based fighting game with your favorite superheroes. Win 5 battle to finish this game.
-Please follow the Prerequisites and installing below to get the required tools to run this progarm.
+Please follow the Prerequisites and installing below to get the required tools to run this program.
 
 
 ## Getting Started
@@ -31,6 +31,7 @@ rmagick
 ```
 
 There might be a problem with installing catpix gem. Link to fixing issue with rmagick gem:
+
 ```
 https://stackoverflow.com/questions/16774501/rmagick-gem-installation-issue
 ```
@@ -43,6 +44,10 @@ ruby ./bin/run.rb
 ```
 
 Run this command and enjoy!
+
+## Picture of program
+
+
 
 ## Built With
 
