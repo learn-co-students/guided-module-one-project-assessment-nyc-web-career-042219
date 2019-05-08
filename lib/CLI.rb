@@ -118,6 +118,7 @@ end
 
 def download_image(url)
   open(url) do |u|
-    File.open(url.split('/').last, 'wb') {|f| f.write(u.read)}
+    binding.pry
+    File.open(url.split('/').last, 'wb') {|f| binding.pry;f.write(u.read)}
   end
 end
