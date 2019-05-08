@@ -5,7 +5,7 @@ class Enemy < ActiveRecord::Base
   def save_stats(hero_hash)
     self.update(name: hero_hash['name'],
       hp: hero_hash['powerstats']['durability'],
-      atk: hero_hash['powerstats']['strength'],
+      atk: hero_hash['powerstats']['strength'] + hero_hash['powerstats']['combat'],
       def: hero_hash['powerstats']['durability'],
       speed: hero_hash['powerstats']['speed'],
       temp_def: 0,

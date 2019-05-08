@@ -2,45 +2,6 @@ class Stage < ActiveRecord::Base
   has_many :users
   has_many :enemies
 
-  def battle
-    #find user and enemy
-    user = User.find(self.user_id)
-    enemy = Enemy.find(self.enemy_id)
-
-    puts "\n#{enemy.name} entered the room looking to fight you."
-    #start battle
-    until user.hp <= 0 || enemy.hp <= 0
-      #initialize temp def for defend action
-      user.temp_def = 0
-      enemy.temp_def = 0
-
-      #grab enemy input
-      enemy_input = enemy_move
-
-      puts "\nPlease pick an action:"
-      puts "1.Attack \n2.Defend \n3.Run away\n4.Quit"
-      user_input = gets.chomp.to_i
-
-      until user_input > 0 && user_input < 5
-        puts "Please enter a valid # for action."
-        user_input = gets.chomp.to_i
-      end
-
-      exit if user_input == 4
-
-      who_goes_first(user, enemy, user_input, enemy_input)
-      sleep(1)
-    end
-
-    if user.hp <= 0
-      return false
-    else
-      #we need to move stages
-      puts "\nBearded Wizard: Wow! You beat #{enemy.name}!"
-      return true
-    end
-  end
-
   def who_goes_first(user, enemy, user_input, enemy_input)
     first = true
     if user_input == 3
@@ -78,7 +39,8 @@ class Stage < ActiveRecord::Base
   end
 
 
-  def defend(attacker) #lowers enemy attack and recovers some hp
+  def defend(attacker)
+    #increase defense temporarily
     attacker.temp_def = (rand(25) + 6)
     if attacker.class == User
       puts "\nYou defended... like a coward."
@@ -87,6 +49,14 @@ class Stage < ActiveRecord::Base
       puts "\n#{attacker.name} put defenses up!"
       puts "#{attacker.name} increased defense by #{attacker.temp_def}."
     end
+
+    #recover some hp if possible
+    # if attacker.hp < attacker.max_hp
+    #   attacker.hp += (rand(25) + 6)
+    #   if attacker.hp > attacker.max_hp
+    #     attacker.hp = attacker.max_hp
+    #   end
+    # end
   end
 
   def run_away(user, enemy)
