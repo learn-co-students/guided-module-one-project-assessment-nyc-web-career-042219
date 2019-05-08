@@ -6,7 +6,6 @@ A terminal command line turn base fighting game made in Ruby
 
 This is a turn based fighting game with your favorite superheroes. Win 5 battle to finish this game.
 Please follow the Prerequisites and installing below to get the required tools to run this progarm.
-Once everything is prepare you can run this game just by typing ruby ./bin/run.rb
 
 
 ## Getting Started
@@ -36,44 +35,32 @@ There might be a problem with installing catpix gem. Link to fixing issue with r
 https://stackoverflow.com/questions/16774501/rmagick-gem-installation-issue
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
 
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+## How to run our program
 
 ```
-Give an example
+ruby ./bin/run.rb
 ```
+
+Run this command and enjoy!
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+* Ruby
+* gem "sinatra-activerecord"
+* gem "sqlite3"
+* gem "pry"
+* gem "require_all"
+* gem "faker"
+* gem 'rest-client'
+* gem 'catpix'
 
 ## Authors
 
 * Won Kim and Qun Li Huang
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
+* Thanks to https://cobwwweb.com/download-collection-of-images-from-url-using-ruby for the download image code!
 * Inspiration
 * etc
