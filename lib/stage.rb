@@ -19,7 +19,7 @@ class Stage < ActiveRecord::Base
     #print that you're fighting this enemy name
     enemy_url = enemy_hash['images']['lg']
     download_image(enemy_url)
-    Catpix::print_image enemy_url.split('/').last, center_x: true, limit_y: 1
+    print_picture(enemy_url.split('/').last)
     puts "#{enemy.name} entered the room looking to fight you."
 
     #find the user
@@ -31,9 +31,13 @@ class Stage < ActiveRecord::Base
       enemy.temp_def = 0
 
       enemy_input = enemy_move
+
       puts "Please pick an action:\n"
-      puts "1.Attack \n2.Defend \n3.Run away"
+      puts "1.Attack \n2.Defend \n3.Run away\n4.Quit"
       user_input = gets.chomp.to_i
+
+      exit if user_input == 4
+
       who_goes_first(user, enemy, user_input, enemy_input)
     end
 
