@@ -14,4 +14,14 @@
 class User < ActiveRecord::Base
   has_many :usergames
   has_many :games, through: :usergames
+
+  # attr_accessor :choice
+
+  # def get_user_choice
+  #   puts 'Select your choice: '
+  #   @choice = gets.chomp
+  # end
+
+
+
 end
