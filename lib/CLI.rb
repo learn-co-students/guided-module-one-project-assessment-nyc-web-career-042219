@@ -122,3 +122,25 @@ def download_image(url)
     File.open(url.split('/').last, 'wb') {|f| binding.pry;f.write(u.read)}
   end
 end
+
+def title_screen
+  loop do
+    puts "1.New Game \n2.Continue \n3.exit"
+    user_input = gets.chomp.to_i
+    if user_input == 1
+      start
+      break
+    elsif user_input == 2
+      puts "Please enter your name"
+      user_name = gets.chomp
+      user = User.find_by(name: "user_name")
+      stage(user)
+      break
+    elsif user_input == 3
+      puts "See you again"
+      exit
+    else
+      puts "Please provide valid #"
+    end
+  end
+end
