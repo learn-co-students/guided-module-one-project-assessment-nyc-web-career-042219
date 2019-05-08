@@ -25,7 +25,7 @@ class CLI
 
   def create_user
     puts "Please enter your name."
-    name_input = gets.chomp
+    name_input = gets.chomp.downcase
     if !User.find_by(name: name_input)
       @user = User.create(name: name_input)
       main_menu_options
@@ -59,7 +59,7 @@ class CLI
       puts "Let's look at some movies."
        movie_search
     elsif input == '2'
-      puts "Let's look at your movies and reviews."
+      puts "Here's your list of movies:"
       format_movie_list
     elsif input == '3'
       # work_in_progress method
@@ -157,7 +157,7 @@ class CLI
 
   def select_movie_from_list_menu #this method allows a user to select a movie from the number next to its title
     movie_list = get_movie_list
-    puts "please select the movie number of the movie you'd like to rate and review"
+    puts "Please select a movie by number."
 
     selected_movie = ""
     input = gets.chomp
@@ -177,14 +177,17 @@ class CLI
     #puts "Please select the action you'd like to take: 1) Write a Review"
     puts "If you would like to rate and review - press 1"
     puts "To view your review - press 2"
-    puts "Or to go back to main menu - press 3"
+    puts "To delete this movie from your list - press 3"
+    puts "To go back to main menu - press 4"
     input = gets.chomp
       if input == "1"
         write_a_review(selected_movie)
       elsif input == "2"
         view_review(selected_movie)
-      elsif input == "3"
+      elsif input == "4"
         main_menu_options
+      elsif input == "3"
+        delete_movie_from_list(selected_movie)
       else
         puts "Please enter a valid option"
         act_on_selected_movie(selected_movie)
@@ -227,7 +230,12 @@ class CLI
       view_review(arg)
       #this will send them back to the beginning
       end
+    end
 
+    def delete_movie_from_list(arg)
+      puts "You've removed #{arg.title} from your list."
+      arg.destroy
+      main_menu_options
     end
 
   end
