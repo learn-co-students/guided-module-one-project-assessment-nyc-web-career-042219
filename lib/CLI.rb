@@ -1,3 +1,28 @@
+def title_screen
+  print_picture("title.png")
+
+  loop do
+    puts "Welcome to Super Heroes Arena"
+    puts "1.New Game \n2.Continue \n3.Exit"
+    user_input = gets.chomp.to_i
+    if user_input == 1
+      start
+      break
+    elsif user_input == 2
+      puts "Please enter your name"
+      user_name = gets.chomp
+      user = User.find_by(name: user_name)
+      stage(user)
+      break
+    elsif user_input == 3
+      puts "See you later sucka"
+      exit
+    else
+      puts "Please provide valid #"
+    end
+  end
+end
+
 def start
   puts "You entered a dark room..."
   puts "A bearded wizard appears"
@@ -33,7 +58,9 @@ end
 
 def confirm(hero_hash, user)
   #test catpix
-  show_picture(hero_hash)
+  hero_url = hero_hash['images']['lg']
+  download_image(hero_url)
+  print_picture(hero_url.split('/').last)
   #put delay
   sleep(1)
 
@@ -68,29 +95,31 @@ end
 def stage(user)
   puts "Bearded Wizard: Well then, it's time to FIGHT TO THE DEATH!"
 
-  count = 1
+  count = user.stage_level
   while count < 5
     puts "STAGE #{count} BEGIN!"
-    new_stage = Stage.new(user_id: user.id, level: count)
+    new_stage = Stage.find_or_create_by(user_id: user.id, level: count)
     result = new_stage.battle
 
     if result
       #loop for new stage
       count += 1
+      user.update(stage_level: count)
+      sleep(1)
+
+      victory if count > 5
     else
       game_over(user)
       break
     end
   end
-
-  victory
 end
 
 def victory
   puts "Bearded Wizard: Woah! You actually won! That's incredible... congrats"
   puts "VICTORY!"
 
-  Catpix::print_image "winner.jpg", center_x: true, limit_y: 1
+  print_picture("winner.jpg")
 end
 
 def game_over(user)
@@ -109,11 +138,8 @@ def game_over(user)
   end
 end
 
-def show_picture(hero_hash)
-  hero_url = hero_hash['images']['lg']
-  download_image(hero_url)
-
-  Catpix::print_image hero_url.split('/').last, center_x: true, limit_y: 1
+def print_picture(url, limit_x: 0)
+  Catpix::print_image url, center_x: true, limit_y: 1
 end
 
 def download_image(url)

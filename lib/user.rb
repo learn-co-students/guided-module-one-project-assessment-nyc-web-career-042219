@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
     self.speed = hero_hash['powerstats']['speed']
     self.temp_def = 0
     self.max_hp = hero_hash['powerstats']['durability']
+    self.stage_level = 1
     self.save
   end
 
