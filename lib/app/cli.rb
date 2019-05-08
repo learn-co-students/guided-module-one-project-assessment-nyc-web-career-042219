@@ -96,12 +96,31 @@ class CLI
     input = gets.chomp
 
     new_input = input.to_i - 1
-
+      movie_title = ""
     movie_results.each do |movie|
       if movie_results.index(movie) == new_input
-        puts movie
+        movie_title = movie
       end
     end
+    find_movie_by_title(movie_title)
+  end
+
+  def find_movie_by_title(arg)
+    query_response = RestClient.get("http://www.omdbapi.com/?t=#{arg}&apikey=a2d3299b")
+    parsed_response = JSON.parse(query_response)
+    movie_deets_hash =
+    {"Title" => parsed_response["Title"],
+    "Released" => parsed_response["Released"].slice(-4..).to_i,
+    "Genre" => parsed_response["Genre"],
+    "Director" => parsed_response["Director"]}
+    add_movie_to_database(movie_deets_hash)
+  end
+
+  def add_movie_to_database(hash)
+    Movie.find_or_create_by(title: hash["Title"],
+      release_year: hash["Released"],
+      genre: hash["Genre"],
+      director: hash["Director"])
   end
 
 end
