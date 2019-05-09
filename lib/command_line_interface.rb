@@ -21,9 +21,12 @@ class CommandLineInterface
     when 2
       start_new_game
     when 3
-      delete_account
+      confirm_delete_account
     when 4
       exit
+    else
+      puts 'Please provide a valid input'
+      options(user)
     end
   end
 
@@ -76,15 +79,19 @@ class CommandLineInterface
   def play_game
     questions_array = game.set_question_data
     until questions_array.empty?
-      game.set_current_question
-      puts game.question_string
-      game.set_current_choices
-      game.print_choices
+      pre_round_setup
       puts '*****************************************************'
       user_input = game.current_choices[gets.chomp.to_i - 1]
       puts '*****************************************************'
       evaluate_answer(game, user_input)
     end
+  end
+
+  def pre_round_setup
+    game.set_current_question
+    puts game.question_string
+    game.set_current_choices
+    game.print_choices
   end
 
   def update_on_correct_response
@@ -93,11 +100,19 @@ class CommandLineInterface
     user.update(id: user.id, total_correct: t_correct, correct_streak: c_streak)
   end
 
+  # * In between method before deleting your account.
+  def confirm_delete_account
+    puts 'This action is irreversible.'
+    puts 'Type \'delete\' to continue or anything else to exit.'
+    user_input = gets.chomp
+    user_input == 'delete' ? delete_account : exit
+  end
+
   # * Deletes the users account from the database then reruns the program
   # * from the beginning.
   def delete_account
     User.delete(user.id)
-    greet
+    exit
   end
 
 end
