@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_06_210049) do
+ActiveRecord::Schema.define(version: 2019_05_09_132942) do
 
   create_table "games", force: :cascade do |t|
     t.integer "num_players"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2019_05_06_210049) do
     t.integer "num_games", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "longest_streak", default: 0
   end
 
 end

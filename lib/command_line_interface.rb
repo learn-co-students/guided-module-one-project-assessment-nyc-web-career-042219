@@ -4,7 +4,8 @@ class CommandLineInterface
   # * Initial CLI greeting that leads to either getting or creating
   # * a brand new user.
   def greet
-    puts 'Welcome to CLI Trivia'
+    title_call
+    puts "*" * 100
     puts 'Enter your username below to either create or retrieve you account.'
     username = gets.chomp.downcase
     @user = find_or_create(username)
@@ -17,7 +18,7 @@ class CommandLineInterface
     user_input = gets.chomp.to_i
     case user_input
     when 1
-      access_user_info(user)
+    access_user_info(user)
     when 2
       start_new_game
     when 3
@@ -30,7 +31,27 @@ class CommandLineInterface
     end
   end
 
+  def loading_bar
+    puts "LOADING dat TRIVIA YO"
+    spinner = Enumerator.new do |e|
+      loop do
+    e.yield '|'
+    e.yield '/'
+    e.yield '-'
+    e.yield '\\'
+    end
+  end
+
+  1.upto(100) do |i|
+  progress = "=" * (i/5) unless i < 5
+  printf("\rCombined: [%-20s] %d%% %s", progress, i, spinner.next)
+  sleep(0.1)
+end
+
+  end
+
   def start_new_game
+    loading_bar
     @game = Game.new
     @usergame = Usergame.new(user_id: user.id, game_id: game.id)
     user.update(id: user.id, num_games: user.num_games += 1)
@@ -70,7 +91,8 @@ class CommandLineInterface
   def access_user_info(user)
     puts "#{user.username}'s Profile"
     puts "Total Number of Questions Answered Correctly: #{user.total_correct}"
-    puts "Current steak: #{user.correct_streak}"
+    puts "Current streak: #{user.correct_streak}"
+    puts "Longest Streak #{user.longest_streak}"
     puts "Number of total games: #{user.num_games}"
     puts "Account made: #{user.created_at}"
     options(user)
@@ -85,6 +107,12 @@ class CommandLineInterface
       puts '*****************************************************'
       evaluate_answer(game, user_input)
     end
+    puts '*****************************************************'
+    puts '*****************************************************'
+    puts '*****************************************************'
+    puts '*****************************************************'
+    puts "Thanks for playing, see you soon"
+    options(user)
   end
 
   def pre_round_setup
@@ -98,6 +126,15 @@ class CommandLineInterface
     t_correct = user.total_correct += 1
     c_streak = user.correct_streak += 1
     user.update(id: user.id, total_correct: t_correct, correct_streak: c_streak)
+    longest_streak
+  end
+#helper method for update_on_correct_response
+  def longest_streak
+    total_l_streak = user.longest_streak
+    l_streak = user.correct_streak
+    if l_streak > total_l_streak
+      user.update(id: user.id, longest_streak: l_streak)
+    end
   end
 
   # * In between method before deleting your account.
@@ -115,5 +152,42 @@ class CommandLineInterface
     exit
   end
 
-end
+  def title_call
+    puts "
 
+
+
+                            __          ________ _____ _      ____  __  __ ______
+                            \\ \\        / /  ____/ ____| |    / __ \\|  \\/  |  ____|
+                             \\ \\  /\\ / / | |__ |  |   | |   | |  | | \\  / | |__
+                              \\ \\/  \\/ / |  __|| |    | |   | |  | | |\\/| |  __|
+                               \\  /\\  /  | |___| |____| |___| |__| | |  | | |____
+                                \\/  \\/   |______\\_____|______\\____/|_|  |_|______|
+
+
+    "
+    sleep(1)
+
+    puts "
+                                                _________
+                                                |__   __|
+                                                   | | ___
+                                                   | |/ _ \\
+                                                   | | (_) |
+                                                   |_|\\___/ "
+    sleep(1)
+    puts "
+
+                      _____ _      _____            _______ _____  _______      _______
+                     / ____| |    |_   _|          |__   __|  __ \\|_   _\ \\    / /_   _|   /\\
+                    | |    | |      | |    ______     | |  | |__) | | |  \\ \\  / /  | |    /  \\
+                    | |    | |      | |   |______|    | |  |  _  /  | |   \\ \\/ /   | |   / /\\ \\
+                    | |____| |____ _| |_              | |  | | \\ \\ _| |_   \\  /   _| |_ / ____ \\
+                     \\_____|______|_____|             |_|  |_|  \\_\\_____|   \\/   |_____/_/    \\_\\
+
+
+
+                                                               "
+         end
+
+end
