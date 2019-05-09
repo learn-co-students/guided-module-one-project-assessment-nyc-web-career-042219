@@ -1,3 +1,6 @@
+require 'artii'
+require 'colorize'
+
 class CLI
 
 
@@ -8,11 +11,9 @@ class CLI
 
   def greeting
 
-    require 'artii'
-
     a = Artii::Base.new
-    a.asciify('Movie Selector')
-    puts a.asciify('Movie Selector')
+    a.asciify('Done Wich U')
+    puts a.asciify('Done Wich U').colorize(:blue)
 
     puts "Welcome to Adam, Jake, and Oscar's movie selector!"
   end
@@ -59,7 +60,10 @@ class CLI
   end
 
   def main_menu_options
-    puts "Welcome #{@user.name}!"
+    a = Artii::Base.new
+    a.asciify('Menu')
+    puts a.asciify('Menu').colorize(:blue)
+
     puts ""
     puts "1. Search movies."
     puts "2. View your list."
@@ -159,14 +163,22 @@ class CLI
   end
 
   def format_movie_list #this method formats the users list of movies with a number next to the movie title
+
+    movie_names = get_movie_list.map do |movielist|
+      Movie.all.find(movielist.movie_id).title
+    end
+
+    if movie_names.length ==0
+      puts "You currently have no movies in your list, try searching for a movie!"
+      puts ""
+      main_menu_options
+    else
     puts "Here's your list of movies:"
-     movie_names = get_movie_list.map do |movielist|
-       Movie.all.find(movielist.movie_id).title
-     end
      formatted_movie_names = movie_names.each.with_index(1).map do |movie, index|
       puts "#{index}. #{movie}"
      end
      select_movie_from_list_menu
+   end
   end
 
   def select_movie_from_list_menu #this method allows a user to select a movie from the number next to its title
