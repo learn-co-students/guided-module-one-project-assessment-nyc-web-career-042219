@@ -1,7 +1,8 @@
 class CLI
   def title_screen
+    Catpix::print_image "title.jpg", center_x: true
     loop do
-      puts "Welcome to Super Heroes Arena"
+      puts "Welcome to Super Hero Arena"
       puts "1.Start a new game \n2.Continue game \n3.Exit"
       input = gets.chomp.to_i
 
@@ -12,7 +13,11 @@ class CLI
         puts "Please enter your name:"
         name = gets.chomp
         user = User.find_by(name: name)
-        start_stage(user)
+        if user.stage.level == nil
+          choose_a_hero(user)
+        else
+          start_stage(user)
+        end
         #todo: show user hero and stats again before starting stage.
         #maybe? persist the original enemy from stage before quitting.
         break
@@ -25,9 +30,9 @@ class CLI
   end
 
   def start
-    puts "You entered a dark room..."
-    puts "A bearded wizard appears"
-    puts "Bearded Wizard: What the heck? Who are you? Why are you in my special place?"
+    puts_slowly "You entered a dark room..."
+    puts_slowly "A bearded wizard appears"
+    puts_slowly "Bearded Wizard: What the heck? Who are you? Why are you in my special place?"
     puts "Enter your name:"
 
     name = gets.chomp
@@ -44,9 +49,9 @@ class CLI
   end
 
   def choose_a_hero(user)
-    puts "\nBearded Wizard: So... for some reason you have entered the Superhero Fighting Arena"
-    puts "Bearded Wizard: CHOOSE YOUR SUPERHERO AND FIGHT TO THE DEATH or to the end of the stages."
-    puts "Bearded Wizard: You'll be given a choice between 5 random superheroes."
+    puts_slowly "\nBearded Wizard: So... since you're here, you might as well enter my arena!"
+    puts_slowly "Bearded Wizard: CHOOSE A SUPERHERO AND FIGHT TO THE DEATH or to the end of stage 4"
+    puts_slowly "Bearded Wizard: You'll be given a choice between 5 random superheroes."
 
     sample_heroes = get_data.sample(5)
 
@@ -64,26 +69,24 @@ class CLI
   end
 
   def confirm(hero_hash, user)
-    # hero_url = hero_hash['images']['lg']
-    # download_image(hero_url)
-    # print_picture(hero_url.split('/').last)
+    hero_url = hero_hash['images']['lg']
+    download_image(hero_url)
+    print_picture(hero_url.split('/').last)
 
     puts "#{hero_hash['name']} stats:"
     puts "HP: #{hero_hash['powerstats']['durability']}"
     puts "ATK: #{hero_hash['powerstats']['strength'] + hero_hash['powerstats']['combat']}"
     puts "DEF: #{hero_hash['powerstats']['durability'] + hero_hash['powerstats']['intelligence']}"
     puts "SPEED: #{hero_hash['powerstats']['speed']}"
-    puts "\nBearded Wizard: Oh interesting... are you sure you want to pick this superhero?"
-    puts "Type (Y) to confirm or (N) to go back and choose another superhero."
+    puts "Type (Y) to confirm superhero selection or (N) to go back and choose another superhero."
 
     loop do
       input = gets.chomp.downcase
       case input
       when 'y'
-        puts "Bearded Wizard: I guess that's a good choice..."
         #save user's superhero choice and stats
         user.save_stats(hero_hash)
-        #call stage
+        #start the stage
         start_stage(user)
         break
       when 'n'
@@ -91,60 +94,62 @@ class CLI
         choose_a_hero(user)
         break
       else
-        puts "Beard Wizard: QUIT MESSING AROUND! TYPE IN Y OR N!"
+        puts "Bearded Wizard: QUIT MESSING AROUND! TYPE IN Y OR N!"
       end
     end
   end
 
   def start_stage(user)
-    puts "Bearded Wizard: Well then, it's time to FIGHT TO THE DEATH!"
+    puts_slowly "Bearded Wizard: Well then, it's time to FIGHT TO THE DEATH!"
 
-    stage = Stage.find_by(user_id: user.id)
+    #let's look for a stage if user is already on one
+    stage = Stage.find_or_create_by(user_id: user.id)
+    user.update(stage_id: stage.id)
 
-    if stage == nil
-      stage = Stage.create(user_id: user.id, level: 1)
+    #if level is nil then stage was created for new user/new game
+    if stage.level == nil
       enemy = Enemy.new()
       enemy_hash = get_data.sample(1).first
       enemy.save_stats(enemy_hash)
-      stage.update(enemy_id: enemy.id)
+      enemy.update(stage_id: stage.id)
+      stage.update(level: 1, enemy_id: enemy.id)
     else
-      #continue part
+      #let's continue to where we left off
       #put out our hero name and stats
-      puts "Continuing with #{user.superhero_name}."
-      # download_image(user.picture_url)
-      # print_picture(user.picture_url.split('/').last)
-      sleep(2)
+      puts_slowly "Continuing your game with #{user.superhero_name}."
+      download_image(user.picture_url)
+      print_picture(user.picture_url.split('/').last)
 
       #grab enemy data to set up continuing stage
-      enemy_id = Stage.find_by(user_id: user.id).enemy_id
-      enemy = Enemy.find(enemy_id)
+      enemy = Enemy.find_by(stage_id: stage.id)
     end
-
-    count = stage.level
-    until count == 5
-      puts "\nSTAGE #{count} BEGIN!"
-      puts "A challenger appears..."
+    #begin our stage loop
+    stage_level = stage.level
+    until stage_level == 5
+      puts_slowly "\nSTAGE #{stage_level} BEGIN!"
+      puts_slowly "A challenger appears..."
 
       #print that you're fighting this enemy name
-      # download_image(enemy.picture_url)
-      # print_picture(enemy.picture_url.split('/').last)
+      download_image(enemy.picture_url)
+      print_picture(enemy.picture_url.split('/').last)
 
       #start battle
       result = start_battle(stage)
 
       if result
-        #loop for new stage but wait 2 seconds before starting
+        #loop for new stage
         #need to create new enemy
         enemy = Enemy.new()
         enemy_hash = get_data.sample(1).first
         enemy.save_stats(enemy_hash)
+        enemy.update(stage_id: stage.id)
         stage.update(enemy_id: enemy.id)
 
-        sleep(2)
-        count += 1
-        stage.update(level: count)
-        #if we're on stage 5 you won!
-        if count == 5
+        stage_level += 1
+        binding.pry if stage_level == 5
+        stage.update(level: stage_level)
+        #if we beat stage 4 you won!
+        if stage_level == 5
           victory(user)
           break
         end
@@ -153,9 +158,6 @@ class CLI
         break
       end
     end
-
-    #win or lose delete stage data
-    stage.delete_by_user_id(user.id)
   end
 
   def start_battle(stage)
@@ -163,7 +165,7 @@ class CLI
     user = User.find(stage.user_id)
     enemy = Enemy.find(stage.enemy_id)
 
-    puts "\n#{enemy.name} entered the room looking to fight you."
+    puts_slowly "\n#{enemy.name} entered the room looking to fight you."
     #start battle
     until user.hp <= 0 || enemy.hp <= 0
       #initialize temp def for defend action
@@ -184,8 +186,10 @@ class CLI
 
       exit if user_input == 4
 
+      #need to change, return who goes first
+      #then call action here
+      #and puts out stuff here and not in stage class
       stage.who_goes_first(user, enemy, user_input, enemy_input)
-      sleep(1)
     end
 
     if user.hp <= 0
@@ -198,19 +202,21 @@ class CLI
   end
 
   def victory(user)
-    puts "\nBearded Wizard: Woah! You actually won! That's incredible... congrats"
-    print_picture("winner.jpg")
+    puts_slowly "\nBearded Wizard: Woah! You actually won! That's incredible... congrats"
+    Catpix::print_image "winner.jpg", center_x: true, limit_y: 1
 
     play_again?(user)
   end
 
   def game_over(user)
-    puts "\nBearded Wizard: Haha, I knew you'd lose."
+    puts_slowly "\nBearded Wizard: Haha, I knew you'd lose."
 
     play_again?(user)
   end
 
   def play_again?(user)
+    user.stage.update(level: nil)
+
     puts "Want to play again?"
     puts "Type (Y) to start over and try again or (N) to stop playing"
 
@@ -228,12 +234,12 @@ class CLI
   end
 
   def print_picture(url)
-    Catpix::print_image url, center_x: true, limit_y: 1
+    Catpix::print_image "./lib/photos/" + url, center_x: true, limit_y: 1
   end
 
   def download_image(url)
     open(url) do |u|
-      File.open(url.split('/').last, 'wb') {|f| f.write(u.read)}
+      File.open(File.expand_path("./lib/photos/" + url.split('/').last), 'wb') {|f| f.write(u.read)}
     end
   end
 
@@ -242,5 +248,13 @@ class CLI
     stats_array = JSON.parse(stats_string)
     #todo: reject heroes who have no-profile picture link
     stats_array
+  end
+
+  def puts_slowly(text)
+    for i in text.chars.to_a
+      print i
+      sleep(0.05)
+    end
+    print "\n"
   end
 end
