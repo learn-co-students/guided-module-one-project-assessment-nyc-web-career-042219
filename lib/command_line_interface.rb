@@ -1,4 +1,4 @@
-class CommandLineInterface
+class CommandLineInterface < Design
   attr_accessor :user, :game
 
   # * Initial CLI greeting that leads to either getting or creating
@@ -92,13 +92,16 @@ end
 
   # * Puts several pieces of information about the current user.
   def access_user_info(user)
-    puts "*" * 50
+    print_asterisks
+    sleep(0.5)
     puts "#{user.username}'s Profile"
     puts "Total Number of Questions Answered Correctly: #{user.total_correct}"
     puts "Current streak: #{user.correct_streak}"
     puts "Longest Streak #{user.longest_streak}"
     puts "Number of total games: #{user.num_games}"
     puts "Account made: #{user.created_at}"
+    print_asterisks
+    sleep(1)
     options(user)
   end
 
@@ -155,12 +158,12 @@ end
 def highest_score
   high_score_reward
   high_score_you
-  puts '*' * 50
-  puts "#{user.username.upcase} -- #{user.longest_streak}"
-  puts '*' * 50
+  print_asterisks
+  puts "                  #{user.username.upcase} -- #{user.longest_streak}"
+  print_asterisks
   sleep(2.5)
-  User.order(longest_streak: :DESC).select {|user| puts "#{user.username} - Score #{user.longest_streak}"}
-  puts "*" * 50
+  User.order(longest_streak: :DESC).select {|user| puts "#{user.username.upcase} - Score #{user.longest_streak}"}
+  print_asterisks
   options(user)
 end
 
@@ -219,35 +222,7 @@ end
          end
 
 
-def high_score_reward
-puts  "                                 _         _       _   _
-                                | |       | |     | | (_)
-  ___ ___  _ __   __ _ _ __ __ _| |_ _   _| | __ _| |_ _  ___  _ __  ___
- / __/ _ \\| '_ \\ / _` | '__/ _` | __| | | | |/ _` | __| |/ _ \\| '_ \\/ __|
-| (_| (_) | | | | (_| | | | (_| | |_| |_| | | (_| | |_| | (_) | | | \\__ \\
- \\___\\___/|_| |_|\\__, |_|  \\__,_|\\__|\\__,_|_|\\__,_|\\__|_|\\___/|_| |_|___/
-                  __/ |
-                 |___/                                                   "
 
-
-
-end
-
-def high_score_you
-puts " __   _____  _   _      _    ____  _____   _____ _   _ _____
- \\ \\ / / _ \\| | | |    / \  |  _ \| ____| |_   _| | | | ____|
-  \\ V / | | | | | |   / _ \\ | |_) |  _|     | | | |_| |  _|
-   | || |_| | |_| |  / ___ \\|  _ <| |___    | | |  _  | |___
-   |_| \\___/_\\___/_ /_/ _ \\_\\_| \\_\\_____|  _|_| |_|_|_|_____|
-    | | | |_ _/ ___| | | / ___| / ___/ _ \\|  _ \\| ____|
-    | |_| || | |  _| |_| \\___ \\| |  | | | | |_) |  _|
-    |  _  || | |_| |  _  |___) | |__| |_| |  _ <| |___
-    |_| |_|___\\____|_| |_|____/ \\____\\___/|_| \\_\\_____|
-                                                             "
-
-
-
-end
 
 
 

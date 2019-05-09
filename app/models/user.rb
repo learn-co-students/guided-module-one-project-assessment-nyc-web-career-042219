@@ -9,6 +9,7 @@
 #  num_games      :integer          default(0)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  longest_streak :integer          default(0)
 #
 
 class User < ActiveRecord::Base
