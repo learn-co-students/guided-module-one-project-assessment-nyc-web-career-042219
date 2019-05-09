@@ -12,8 +12,8 @@ class CLI
   def greeting
 
     a = Artii::Base.new
-    a.asciify('Done Wich U')
-    puts a.asciify('Done Wich U').colorize(:red)
+    a.asciify('FlixNet')
+    puts a.asciify('FlixNet').colorize(:blue)
 
     puts "Welcome to Adam, Jake, and Oscar's movie selector!"
   end
@@ -39,6 +39,9 @@ class CLI
     if !User.find_by(name: name_input)
       @user = User.create(name: name_input)
       main_menu_options
+    elsif name_input != String
+      puts "Your name must be a string"
+      create_user
     else
       puts "This account name is already taken. Please choose another."
       create_user
@@ -62,7 +65,7 @@ class CLI
   def main_menu_options
     a = Artii::Base.new
     a.asciify('Menu')
-    puts a.asciify('Menu').colorize(:red)
+    puts a.asciify('Menu').colorize(:blue)
 
     puts ""
     puts "1. Search movies."
@@ -81,7 +84,7 @@ class CLI
       # work_in_progress method
     else
       "Please select a valid option"
-
+      main_menu_options
     end
   end
 
@@ -177,15 +180,47 @@ class CLI
      formatted_movie_names = movie_names.each.with_index(1).map do |movie, index|
       puts "#{index}. #{movie}"
      end
-     select_movie_from_list_menu
+     movie_list_options_list
+     #select_movie_from_list_menu
    end
   end
+
+  def movie_list_options_list
+    puts ""
+    puts "What would you like to do \n 1) Select a movie from the list \n 2) See your favorite Genre \n 3) See your favorite Director"
+    input = gets.chomp
+    updated_rating = input.to_i
+    system("clear")
+
+    if updated_rating.between?(1,3) == false
+      puts "Please input a number between 1 and 3"
+      movie_list_options_list
+    else
+      case updated_rating
+      when 1
+        select_movie_from_list_menu
+      when 2
+        puts "Your favorite genre is: #{@user.find_most_popular_genre}"
+        puts ""
+        puts ""
+        main_menu_options
+      when 3
+        puts "Your favorite director is: #{@user.find_most_popular_director}"
+        puts ""
+        puts ""
+        main_menu_options
+      else
+        movie_list_options_list
+      end
+    end
+  end
+
 
   def select_movie_from_list_menu #this method allows a user to select a movie from the number next to its title
     movie_list = get_movie_list
     puts "Please select a movie by number."
 
-    selected_movie = ""
+    selected_movie = movie_list.first
     input = gets.chomp
     system "clear"
     new_input = input.to_i - 1
@@ -226,15 +261,22 @@ class CLI
     puts "Please select the rating you'd like to give this movie, from 1 - 10"
     input = gets.chomp
     updated_rating = input.to_i
-    movie.rating = updated_rating
 
-    puts "Please write a review for this movie"
-    input = gets.chomp
+    if updated_rating.between?(1,10) == false
+      puts "Please give your movie a rating from 1 - 10"
+      write_a_review(movie)
+    else
+      updated_rating = input.to_i
+      movie.rating = updated_rating
 
-    movie.review = input
-    movie.save
-    system "clear"
-    main_menu_options
+      puts "Please write a review for this movie"
+      input = gets.chomp
+
+      movie.review = input
+      movie.save
+      system "clear"
+      main_menu_options
+    end
   end
 
   def view_review(arg)
