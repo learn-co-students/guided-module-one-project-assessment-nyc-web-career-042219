@@ -65,6 +65,7 @@ class CLI
     puts "3. View your friends or search for friends - work in progress."
     puts "Please input the number corresponding to your choice."
     input = gets.chomp
+    system "clear"
     if input == '1'
       puts "Let's look at some movies."
        movie_search
@@ -79,9 +80,10 @@ class CLI
   end
 
   def movie_search
+
     puts "Please enter the name of the movie you would like to search"
     input = gets.chomp
-
+    system "clear"
     query_response = RestClient.get("http://www.omdbapi.com/?s=#{input}&apikey=a2d3299b")
 
     parsed_response = JSON.parse(query_response)
@@ -135,6 +137,7 @@ class CLI
   def add_movie_to_mylist(movie_object)
     puts "Do you want to add this movie to your list?(y/n)"
     input = gets.chomp
+    system "clear"
     if input == "y"
       List.find_or_create_by(user_id: @user.id, movie_id: movie_object.id, title: movie_object.title )
       format_movie_list
@@ -170,6 +173,7 @@ class CLI
 
     selected_movie = ""
     input = gets.chomp
+    system "clear"
     new_input = input.to_i - 1
     movie_list.each do |movielist|
       if movie_list.index(movielist) == new_input
@@ -189,6 +193,7 @@ class CLI
     puts "To delete this movie from your list - press 3"
     puts "To go back to main menu - press 4"
     input = gets.chomp
+    system "clear"
       if input == "1"
         write_a_review(selected_movie)
       elsif input == "2"
@@ -229,6 +234,7 @@ class CLI
       #write_a_review(arg)
     end
     new_input = gets.chomp
+    system "clear"
     case new_input
     when "y"
       write_a_review(arg)
