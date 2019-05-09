@@ -7,13 +7,20 @@ class CLI
   end
 
   def greeting
+
+    require 'artii'
+
+    a = Artii::Base.new
+    a.asciify('Movie Selector')
+    puts a.asciify('Movie Selector')
+
     puts "Welcome to Adam, Jake, and Oscar's movie selector!"
   end
 
 
   def name_confirmation
     puts "Been here before? (y/n)"
-    user_response = gets.chomp
+    user_response = STDIN.noecho(&:gets).chomp
     if user_response == "y"
       find_user
     elsif user_response == "n"
@@ -59,7 +66,6 @@ class CLI
       puts "Let's look at some movies."
        movie_search
     elsif input == '2'
-      puts "Here's your list of movies:"
       format_movie_list
     elsif input == '3'
       # work_in_progress method
@@ -91,7 +97,6 @@ class CLI
 
 
   def find_movie_from_list(movie_results)
-    #binding.pry
     puts "Please select the number of the movie you'd like to add to your list"
     input = gets.chomp
 
@@ -146,6 +151,7 @@ class CLI
   end
 
   def format_movie_list #this method formats the users list of movies with a number next to the movie title
+    puts "Here's your list of movies:"
      movie_names = get_movie_list.map do |movielist|
        Movie.all.find(movielist.movie_id).title
      end
@@ -205,20 +211,19 @@ class CLI
 
     movie.review = input
     movie.save
-    #binding.pry
+    format_movie_list
   end
 
   def view_review(arg)
-    binding.pry
     if arg.rating == nil
       puts "You have not rated/review this movie."
       write_a_review(arg)
     else
       puts "You gave this movie the following rating: #{arg.rating}"
       puts "You gave this movie the following review:"
-      puts "{arg.review}"
+      puts "#{arg.review}"
       puts "Would you like to update your rating/review? y/n"
-      write_a_review(arg)
+      #write_a_review(arg)
     end
     new_input = gets.chomp
     case new_input
