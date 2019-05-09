@@ -13,7 +13,7 @@ class CLI
 
     a = Artii::Base.new
     a.asciify('Done Wich U')
-    puts a.asciify('Done Wich U').colorize(:blue)
+    puts a.asciify('Done Wich U').colorize(:red)
 
     puts "Welcome to Adam, Jake, and Oscar's movie selector!"
   end
@@ -62,7 +62,7 @@ class CLI
   def main_menu_options
     a = Artii::Base.new
     a.asciify('Menu')
-    puts a.asciify('Menu').colorize(:blue)
+    puts a.asciify('Menu').colorize(:red)
 
     puts ""
     puts "1. Search movies."
