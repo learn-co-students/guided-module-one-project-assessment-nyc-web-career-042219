@@ -1,11 +1,11 @@
-class CommandLineInterface
+class CommandLineInterface < Design
   attr_accessor :user, :game
 
   # * Initial CLI greeting that leads to either getting or creating
   # * a brand new user.
   def greet
     title_call
-    puts "*" * 100
+    print_asterisks
     puts 'Enter your username below to either create or retrieve you account.'
     username = gets.chomp.downcase
     @user = find_or_create(username)
@@ -18,7 +18,7 @@ class CommandLineInterface
     user_input = gets.chomp.to_i
     case user_input
     when 1
-    access_user_info(user)
+      access_user_info(user)
     when 2
       start_new_game
     when 3
@@ -27,27 +27,9 @@ class CommandLineInterface
       exit
     else
       puts 'Please provide a valid input'
+      puts
       options(user)
     end
-  end
-
-  def loading_bar
-    puts "LOADING dat TRIVIA YO"
-    spinner = Enumerator.new do |e|
-      loop do
-    e.yield '|'
-    e.yield '/'
-    e.yield '-'
-    e.yield '\\'
-    end
-  end
-
-  1.upto(100) do |i|
-  progress = "=" * (i/5) unless i < 5
-  printf("\rCombined: [%-20s] %d%% %s", progress, i, spinner.next)
-  sleep(0.1)
-end
-
   end
 
   def start_new_game
@@ -68,6 +50,7 @@ end
       user.update(id: user.id, correct_streak: 0)
       puts "Wrong: #{game.correct_answer}"
     end
+    puts
   end
 
   private
@@ -75,10 +58,12 @@ end
   # * @return [nil]
   # * Displays the options available to the user.
   def display_options
+    puts
     puts 'To view account information press the number [1].'
     puts 'To begin a new game press the number [2].'
     puts 'To permanently delete your account [3].'
     puts 'To exit the program [4].'
+    puts
   end
 
   # @ Returns instance of User.
@@ -102,19 +87,17 @@ end
     questions_array = game.set_question_data
     until questions_array.empty?
       pre_round_setup
-      puts '*****************************************************'
+      print_asterisks
       user_input = game.current_choices[gets.chomp.to_i - 1]
-      puts '*****************************************************'
+      print_asterisks
       evaluate_answer(game, user_input)
     end
-    puts '*****************************************************'
-    puts '*****************************************************'
-    puts '*****************************************************'
-    puts '*****************************************************'
-    puts "Thanks for playing, see you soon"
+    print_asterisks
+    puts 'Thanks for playing, see you soon'
     options(user)
   end
 
+  # Calls various methods before the the user input.
   def pre_round_setup
     game.set_current_question
     puts game.question_string
@@ -128,13 +111,12 @@ end
     user.update(id: user.id, total_correct: t_correct, correct_streak: c_streak)
     longest_streak
   end
-#helper method for update_on_correct_response
+
+  # helper method for update_on_correct_response
   def longest_streak
     total_l_streak = user.longest_streak
     l_streak = user.correct_streak
-    if l_streak > total_l_streak
-      user.update(id: user.id, longest_streak: l_streak)
-    end
+    user.update(id: user.id, longest_streak: l_streak) if l_streak > total_l_streak
   end
 
   # * In between method before deleting your account.
@@ -152,42 +134,6 @@ end
     exit
   end
 
-  def title_call
-    puts "
-
-
-
-                            __          ________ _____ _      ____  __  __ ______
-                            \\ \\        / /  ____/ ____| |    / __ \\|  \\/  |  ____|
-                             \\ \\  /\\ / / | |__ |  |   | |   | |  | | \\  / | |__
-                              \\ \\/  \\/ / |  __|| |    | |   | |  | | |\\/| |  __|
-                               \\  /\\  /  | |___| |____| |___| |__| | |  | | |____
-                                \\/  \\/   |______\\_____|______\\____/|_|  |_|______|
-
-
-    "
-    sleep(1)
-
-    puts "
-                                                _________
-                                                |__   __|
-                                                   | | ___
-                                                   | |/ _ \\
-                                                   | | (_) |
-                                                   |_|\\___/ "
-    sleep(1)
-    puts "
-
-                      _____ _      _____            _______ _____  _______      _______
-                     / ____| |    |_   _|          |__   __|  __ \\|_   _\ \\    / /_   _|   /\\
-                    | |    | |      | |    ______     | |  | |__) | | |  \\ \\  / /  | |    /  \\
-                    | |    | |      | |   |______|    | |  |  _  /  | |   \\ \\/ /   | |   / /\\ \\
-                    | |____| |____ _| |_              | |  | | \\ \\ _| |_   \\  /   _| |_ / ____ \\
-                     \\_____|______|_____|             |_|  |_|  \\_\\_____|   \\/   |_____/_/    \\_\\
-
-
-
-                                                               "
-         end
-
 end
+
+
