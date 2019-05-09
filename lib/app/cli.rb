@@ -20,7 +20,8 @@ class CLI
 
   def name_confirmation
     puts "Been here before? (y/n)"
-    user_response = STDIN.noecho(&:gets).chomp
+    user_response = gets.chomp.downcase
+    system "clear"
     if user_response == "y"
       find_user
     elsif user_response == "n"
@@ -33,6 +34,7 @@ class CLI
   def create_user
     puts "Please enter your name."
     name_input = gets.chomp.downcase
+    system "clear"
     if !User.find_by(name: name_input)
       @user = User.create(name: name_input)
       main_menu_options
@@ -45,6 +47,7 @@ class CLI
   def find_user
     puts "Please enter your name."
     name_input = gets.chomp
+    system "clear"
     actual_user = User.find_by(name: name_input)
     if !actual_user
       puts "we could not find that user name. Please try again."
