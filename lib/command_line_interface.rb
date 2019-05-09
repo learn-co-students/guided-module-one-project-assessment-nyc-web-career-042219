@@ -84,7 +84,9 @@ class CommandLineInterface < Design
   end
 
   def play_game
-    questions_array = game.set_question_data
+    attributes = setup_game
+    game.update(num_games: game.num_games + 1)
+    questions_array = game.set_question_data(attributes)
     until questions_array.empty?
       pre_round_setup
       print_asterisks
@@ -132,6 +134,22 @@ class CommandLineInterface < Design
   def delete_account
     User.delete(user.id)
     exit
+  end
+
+  def setup_game
+    print_asterisks
+    num_questions = display_game_length_options
+  end
+
+  def display_game_length_options
+    puts 'How many questions would you like to have?'
+    user_input = gets.chomp.to_i
+    # unless user_input.class == Integer
+    #   puts
+    #   puts "#{user_input} is not a valid number."
+    #   display_game_length_options
+    # end
+    user_input
   end
 
 end
