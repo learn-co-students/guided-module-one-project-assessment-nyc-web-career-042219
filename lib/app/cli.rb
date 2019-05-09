@@ -33,7 +33,7 @@ class CLI
 
   def create_user
     puts "Please enter your name."
-    name_input = gets.chomp.downcase
+    name_input = gets.chomp
     system "clear"
     if !User.find_by(name: name_input)
       @user = User.create(name: name_input)
@@ -53,16 +53,18 @@ class CLI
       puts "we could not find that user name. Please try again."
       find_user
     else
-      puts "Welcome back, #{actual_user.name}! Let's go the main menu"
       @user = actual_user
       main_menu_options
     end
   end
 
   def main_menu_options
+    puts "Welcome #{@user.name}!"
+    puts ""
     puts "1. Search movies."
     puts "2. View your list."
-    puts "3. View your friends or search for friends - work in progress."
+    # puts "3. View your friends or search for friends - work in progress."
+    puts ""
     puts "Please input the number corresponding to your choice."
     input = gets.chomp
     system "clear"
@@ -71,7 +73,7 @@ class CLI
        movie_search
     elsif input == '2'
       format_movie_list
-    elsif input == '3'
+    # elsif input == '3'
       # work_in_progress method
     else
       "Please select a valid option"
@@ -219,7 +221,8 @@ class CLI
 
     movie.review = input
     movie.save
-    format_movie_list
+    system "clear"
+    main_menu_options
   end
 
   def view_review(arg)
@@ -231,7 +234,6 @@ class CLI
       puts "You gave this movie the following review:"
       puts "#{arg.review}"
       puts "Would you like to update your rating/review? y/n"
-      #write_a_review(arg)
     end
     new_input = gets.chomp
     system "clear"
