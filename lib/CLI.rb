@@ -1,6 +1,8 @@
 class CLI
   def title_screen
+    pid = fork{ exec 'afplay', "themesong.mp3" }
     Catpix::print_image "title.jpg", center_x: true
+
     loop do
       puts "Welcome to Super Hero Arena"
       puts "1.Start a new game \n2.Continue game \n3.Exit"
@@ -126,8 +128,8 @@ class CLI
     #begin our stage loop
     stage_level = stage.level
     until stage_level == 5
-      puts_slowly "\nSTAGE #{stage_level} BEGIN!"
-      puts_slowly "A challenger appears..."
+      puts_slowly "\nSTAGE #{stage_level} BEGIN!".colorize(:cyan).bold
+      puts_slowly "A challenger appears...".colorize(:magenta).bold
 
       #print that you're fighting this enemy name
       download_image(enemy.picture_url)
@@ -165,7 +167,7 @@ class CLI
     user = User.find(stage.user_id)
     enemy = Enemy.find(stage.enemy_id)
 
-    puts_slowly "\n#{enemy.name} entered the room looking to fight you."
+    puts_slowly "\n#{enemy.name} entered the room looking to fight you.".colorize(:light_magenta).bold
     #start battle
     until user.hp <= 0 || enemy.hp <= 0
       #initialize temp def for defend action
@@ -238,8 +240,9 @@ class CLI
   end
 
   def download_image(url)
+    path = "./lib/photos/"
     open(url) do |u|
-      File.open(File.expand_path("./lib/photos/" + url.split('/').last), 'wb') {|f| f.write(u.read)}
+      File.open(File.expand_path(path + url.split('/').last), 'wb') {|f| f.write(u.read)}
     end
   end
 
