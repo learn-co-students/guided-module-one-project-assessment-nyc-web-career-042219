@@ -18,9 +18,8 @@ elsewhere = Venue.find_or_create_by(name:"Elsewhere", location: "Brooklyn, NY", 
 rr_hotel = Venue.find_or_create_by(name:"Rock & Roll Hotel", location: "Washington, DC", family_friendly: true)
 bowery = Venue.find_or_create_by(name:"Bowery Ballroom", location: "New York, NY", family_friendly: false)
 
-mats = Ticket.find_or_create_by(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "The Replacements")
-descendants = Ticket.find_or_create_by(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "The Descendants")
-skeletonwitch = Ticket.find_or_create_by(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "Skeletonwitch")
-samiam = Ticket.find_or_create_by(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "Samiam")
-weapons = Ticket.find_or_create_by(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "Primitive Weapons")
-
+mats = Ticket.create(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "The Replacements")
+descendants = Ticket.create(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "The Descendants")
+skeletonwitch = Ticket.create(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "Skeletonwitch")
+samiam = Ticket.create(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "Samiam")
+weapons = Ticket.create(user_id: User.all.sample.id, venue_id: Venue.all.sample.id, band_name: "Primitive Weapons")
