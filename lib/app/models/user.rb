@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
     end
  end
 
- 
+
  #----------------------------------for genre
   def get_genres_from_movie_objects
     get_movie_objects.map do |object|
@@ -31,5 +31,18 @@ class User < ActiveRecord::Base
     end.values.max_by(&:size).first
   end
 #-------------------------------------------
+
+  def get_directors_from_movie_object
+    get_movie_objects.map do |object|
+      object.director
+    end.join(', ')
+  end
+
+  def find_most_popular_director
+    director = get_directors_from_movie_object.split(',')
+    director.group_by do |director|
+      director
+    end.values.max_by(&:size).first
+  end
 
 end
