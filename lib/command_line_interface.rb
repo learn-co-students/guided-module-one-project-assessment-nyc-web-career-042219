@@ -22,8 +22,10 @@ class CommandLineInterface
     when 2
       start_new_game
     when 3
-      confirm_delete_account
+      high_scores
     when 4
+      confirm_delete_account
+    when 5
       exit
     else
       puts 'Please provide a valid input'
@@ -63,7 +65,7 @@ end
   def evaluate_answer(game, choice)
     if game.correct?(choice)
       update_on_correct_response
-      puts "Correct, Your Steak: #{user.correct_streak}"
+      puts "Correct, Your Streak: #{user.correct_streak}"
     else
       user.update(id: user.id, correct_streak: 0)
       puts "Wrong: #{game.correct_answer}"
@@ -75,10 +77,11 @@ end
   # * @return [nil]
   # * Displays the options available to the user.
   def display_options
-    puts 'To view account information press the number [1].'
-    puts 'To begin a new game press the number [2].'
-    puts 'To permanently delete your account [3].'
-    puts 'To exit the program [4].'
+    puts 'To view account information press the number [1]'
+    puts 'To begin a new game press the number [2]'
+    puts 'To view HIGH SCCORES press the number [3]'
+    puts 'To permanently delete your account press the number [4]'
+    puts 'To exit the program [5].'
   end
 
   # @ Returns instance of User.
@@ -89,6 +92,7 @@ end
 
   # * Puts several pieces of information about the current user.
   def access_user_info(user)
+    puts "*" * 50
     puts "#{user.username}'s Profile"
     puts "Total Number of Questions Answered Correctly: #{user.total_correct}"
     puts "Current streak: #{user.correct_streak}"
@@ -137,12 +141,35 @@ end
     end
   end
 
+
+  def high_scores
+    if user.username.downcase == User.order(longest_streak: :DESC).first.username.downcase
+      highest_score
+  else
+      User.order(longest_streak: :DESC).select {|user| puts "#{user.username} - Score #{user.longest_streak}"}
+      sleep(2.5)
+      options(user)
+  end
+end
+
+def highest_score
+  high_score_reward
+  high_score_you
+  puts '*' * 50
+  puts "#{user.username.upcase} -- #{user.longest_streak}"
+  puts '*' * 50
+  sleep(2.5)
+  User.order(longest_streak: :DESC).select {|user| puts "#{user.username} - Score #{user.longest_streak}"}
+  puts "*" * 50
+  options(user)
+end
+
   # * In between method before deleting your account.
   def confirm_delete_account
     puts 'This action is irreversible.'
-    puts 'Type \'delete\' to continue or anything else to exit.'
+    puts 'Type \'delete\' to continue or anything else to return to the menu.'
     user_input = gets.chomp
-    user_input == 'delete' ? delete_account : exit
+    user_input == 'delete' ? delete_account : options(user)
   end
 
   # * Deletes the users account from the database then reruns the program
@@ -151,6 +178,7 @@ end
     User.delete(user.id)
     exit
   end
+
 
   def title_call
     puts "
@@ -189,5 +217,44 @@ end
 
                                                                "
          end
+
+
+def high_score_reward
+puts  "                                 _         _       _   _
+                                | |       | |     | | (_)
+  ___ ___  _ __   __ _ _ __ __ _| |_ _   _| | __ _| |_ _  ___  _ __  ___
+ / __/ _ \\| '_ \\ / _` | '__/ _` | __| | | | |/ _` | __| |/ _ \\| '_ \\/ __|
+| (_| (_) | | | | (_| | | | (_| | |_| |_| | | (_| | |_| | (_) | | | \\__ \\
+ \\___\\___/|_| |_|\\__, |_|  \\__,_|\\__|\\__,_|_|\\__,_|\\__|_|\\___/|_| |_|___/
+                  __/ |
+                 |___/                                                   "
+
+
+
+end
+
+def high_score_you
+puts " __   _____  _   _      _    ____  _____   _____ _   _ _____
+ \\ \\ / / _ \\| | | |    / \  |  _ \| ____| |_   _| | | | ____|
+  \\ V / | | | | | |   / _ \\ | |_) |  _|     | | | |_| |  _|
+   | || |_| | |_| |  / ___ \\|  _ <| |___    | | |  _  | |___
+   |_| \\___/_\\___/_ /_/ _ \\_\\_| \\_\\_____|  _|_| |_|_|_|_____|
+    | | | |_ _/ ___| | | / ___| / ___/ _ \\|  _ \\| ____|
+    | |_| || | |  _| |_| \\___ \\| |  | | | | |_) |  _|
+    |  _  || | |_| |  _  |___) | |__| |_| |  _ <| |___
+    |_| |_|___\\____|_| |_|____/ \\____\\___/|_| \\_\\_____|
+                                                             "
+
+
+
+end
+
+
+
+
+
+
+
+
 
 end
