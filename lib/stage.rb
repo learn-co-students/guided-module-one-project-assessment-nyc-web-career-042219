@@ -2,45 +2,6 @@ class Stage < ActiveRecord::Base
   has_many :users
   has_many :enemies
 
-  def battle
-    #find user and enemy
-    user = User.find(self.user_id)
-    enemy = Enemy.find(self.enemy_id)
-
-    puts "\n#{enemy.name} entered the room looking to fight you."
-    #start battle
-    until user.hp <= 0 || enemy.hp <= 0
-      #initialize temp def for defend action
-      user.temp_def = 0
-      enemy.temp_def = 0
-
-      #grab enemy input
-      enemy_input = enemy_move
-
-      puts "\nPlease pick an action:"
-      puts "1.Attack \n2.Defend \n3.Run away\n4.Quit"
-      user_input = gets.chomp.to_i
-
-      until user_input > 0 && user_input < 5
-        puts "Please enter a valid # for action."
-        user_input = gets.chomp.to_i
-      end
-
-      exit if user_input == 4
-
-      who_goes_first(user, enemy, user_input, enemy_input)
-      sleep(1)
-    end
-
-    if user.hp <= 0
-      return false
-    else
-      #we need to move stages
-      puts "\nBearded Wizard: Wow! You beat #{enemy.name}!"
-      return true
-    end
-  end
-
   def who_goes_first(user, enemy, user_input, enemy_input)
     first = true
     if user_input == 3
@@ -72,34 +33,43 @@ class Stage < ActiveRecord::Base
     end
     defender.hp -= damage
 
-    puts "\n#{attacker.name} did #{damage} damage to #{defender.name}!"
-    puts "#{defender.name} has #{defender.hp} HP left!"
+    puts_slowly "\n#{attacker.name} did #{damage} damage to #{defender.name}!"
+    puts_slowly "#{defender.name} has #{defender.hp} HP left!"
     sleep(1)
   end
 
 
-  def defend(attacker) #lowers enemy attack and recovers some hp
+  def defend(attacker)
+    #increase defense temporarily
     attacker.temp_def = (rand(25) + 6)
     if attacker.class == User
-      puts "\nYou defended... like a coward."
-      puts "But you actually increased your defense by #{attacker.temp_def}."
+      puts_slowly "\nYou defended... like a coward."
+      puts_slowly "But you actually increased your defense by #{attacker.temp_def}."
     elsif attacker.class == Enemy
-      puts "\n#{attacker.name} put defenses up!"
-      puts "#{attacker.name} increased defense by #{attacker.temp_def}."
+      puts_slowly "\n#{attacker.name} put defenses up!"
+      puts_slowly "#{attacker.name} increased defense by #{attacker.temp_def}."
     end
+
+    #recover some hp if possible
+    # if attacker.hp < attacker.max_hp
+    #   attacker.hp += (rand(25) + 6)
+    #   if attacker.hp > attacker.max_hp
+    #     attacker.hp = attacker.max_hp
+    #   end
+    # end
   end
 
   def run_away(user, enemy)
-    puts "\nBearded Wizard: HAHAHA you think you can run away???"
+    puts_slowly "\nBearded Wizard: HAHAHA you think you can run away???"
 
     #chance to die cause you tried to run
     die_chance = rand(100)
     case die_chance
     when 0..95
-      puts "#{enemy.name} slashed you in the back as you tried to run away, you coward."
+      puts_slowly "#{enemy.name} slashed you in the back as you tried to run away, you coward."
       user.hp = 0
     else
-      puts "Holy crap, the enemy actually let you run away."
+      puts_slowly "Wow, the enemy actually let you run away."
       enemy.hp = 0
     end
   end
@@ -113,5 +83,13 @@ class Stage < ActiveRecord::Base
     when 15..19
       return 1
     end
+  end
+
+  def puts_slowly(text)
+    for i in text.chars.to_a
+      print i
+      sleep(0.02)
+    end
+    print "\n"
   end
 end

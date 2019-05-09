@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 2019_05_06_183224) do
     t.integer "speed"
     t.integer "max_hp"
     t.integer "temp_def"
+    t.integer "stage_id"
+    t.string "picture_url"
   end
 
   create_table "stages", force: :cascade do |t|
@@ -31,14 +33,14 @@ ActiveRecord::Schema.define(version: 2019_05_06_183224) do
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "superhero_name"
-    t.string "stage_id"
     t.integer "hp"
     t.integer "atk"
     t.integer "def"
     t.integer "speed"
-    t.integer "temp_def"
     t.integer "max_hp"
-    t.integer "stage_level"
+    t.integer "temp_def"
+    t.integer "stage_id"
+    t.string "picture_url"
   end
 
 end

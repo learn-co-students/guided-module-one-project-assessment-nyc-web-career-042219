@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
       speed: hero_hash['powerstats']['speed'],
       temp_def: 0,
       max_hp: hero_hash['powerstats']['durability'],
-      stage_level: 1)
+      picture_url: hero_hash['images']['lg'])
   end
 
 end
