@@ -1,74 +1,68 @@
-
 require 'rest-client'
 require 'pry'
 require 'json'
 
+class CommandLineInterface
 
   def greet
-    puts 'Welcome to Ticket Pick!'
-    puts 'Would you like to Post a ticket or Search for what\'s out there?'
-    user_input = gets.chomp
-    if user_input.downcase == "search"
-      puts "Choose by venue or user:"
-      first_input = gets.chomp
-      if first_input.downcase == "venue"
-        puts "Choose by Name:"
-        venue_input = gets.chomp
-        venue_input = Venue.all.find_by(name: venue_input)
-      end
-      venue_input.
-    end
+    puts ""
+    puts "Welcome to Ticket Pick!"
+    puts puts "*"*23
+    puts "Post a Ticket or Search for what's out there?"
+    user_response
   end
 
+  def user_response
+    post_or_search = gets.chomp
+    if post_or_search.downcase == "search"
+      self.search_response
+    end
+    #if post, do some code
+  end
 
-    # elsif user_input.downcase == "share"
-    #   puts
-    #
-    # end
+  def search_response
+    puts "Choose by Venue or User:" #or city
+    venue_or_user = gets.chomp
+      if venue_or_user.downcase == "venue"
+        self.search_venue
+        #elsif self.search_user
+        #elsif self.search_city
+        #else exit method
+      end
+  end
 
-    #list of venues
-    #list of users
+    def search_venue
+      puts "Choose by Venue Name:"
+      venue_input = gets.chomp
+      venue_input = Venue.all.find_by(name: venue_input)
+        if venue_input
+            band_info = venue_input.tickets.first.band_name
+            puts "Looks like we have a ticket for #{band_info} at #{venue_input.name}!"
+            puts "*"*60
+            puts "Would you like to view the ticketholder? Y/N"
+            view_ticketholder = gets.chomp
+              if view_ticketholder.downcase == "y"
+                user_id = venue_input.tickets.first.user_id
+              puts "#{User.find(user_id).name}"
+              else
+                #exit method
+              end
+        end
+    end
+
+
+
+end
+
+
+
+    #list of venues - should return a list of venues, with the band_names
+    #list of users - should return users who have tickets, with band_names
+
+    #list of tickets
 
   #   response = RestClient.get("https://api.songkick.com/api/3.0/artists/379603/gigography.json?apikey=nu80rqJInvFVVDU4")
   #   string = response.body
   #   data = JSON.parse(string)
   #   binding.pry
   # end
-
-
-
-
-
-
-
-
-
-
-
-# books.each do |book|
-#   title = book["volumeInfo"]["title"]
-#   author_data = book["volumeInfo"]["authors"]
-#   if author_data
-#     authors = author_data.join(" & ")
-#   else
-#     authors = "No Authors found for this book"
-#   end
-#
-#   description_data = book["volumeInfo"]["description"]
-#
-#   if description_data
-#     description = description_data[0..100] + "..."
-#   else
-#     description = "No description found for this book"
-#   end
-#
-#   puts "Title: #{title}"
-#   puts "Authors: #{authors}"
-#   puts "Description: #{description}"
-#
-#   # puts author names separated by an &
-#
-#   # puts the first 100 characters of the description followed by ...
-#
-#   puts "*" * 15
-# end
