@@ -22,8 +22,10 @@ class CommandLineInterface < Design
     when 2
       start_new_game
     when 3
-      confirm_delete_account
+      high_scores
     when 4
+      confirm_delete_account
+    when 5
       exit
     else
       puts 'Please provide a valid input'
@@ -59,10 +61,11 @@ class CommandLineInterface < Design
   # * Displays the options available to the user.
   def display_options
     puts
-    puts 'To view account information press the number [1].'
-    puts 'To begin a new game press the number [2].'
-    puts 'To permanently delete your account [3].'
-    puts 'To exit the program [4].'
+    puts 'To view account information press the number [1]'
+    puts 'To begin a new game press the number [2]'
+    puts 'To view HIGH SCORES press the number [3]'
+    puts 'To permanently delete your account press the number [4]'
+    puts 'To exit the program press the number [5].'
     puts
   end
 
@@ -150,6 +153,32 @@ class CommandLineInterface < Design
     #   display_game_length_options
     # end
     user_input
+  end
+
+  def high_scores
+    if user.username.casecmp(User.order(longest_streak: :DESC).first.username).zero?
+      highest_score
+    else
+      User.order(longest_streak: :DESC).select do |user|
+        puts "#{user.username} - Score #{user.longest_streak}"
+      end
+      sleep(2.5)
+      options(user)
+    end
+  end
+
+  def highest_score
+    high_score_reward
+    high_score_you
+    print_asterisks
+    puts "                  #{user.username.upcase} -- #{user.longest_streak}"
+    print_asterisks
+    sleep(2.5)
+    User.order(longest_streak: :DESC).select do |user|
+      puts "#{user.username.upcase} - Score #{user.longest_streak}"
+    end
+    print_asterisks
+    options(user)
   end
 
 end
