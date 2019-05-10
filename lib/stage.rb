@@ -33,9 +33,8 @@ class Stage < ActiveRecord::Base
     end
     defender.hp -= damage
 
-    puts_slowly "\n#{attacker.name} did #{damage} damage to #{defender.name}!"
-    puts_slowly "#{defender.name} has #{defender.hp} HP left!"
-    sleep(1)
+    puts_slowly "\n#{attacker.name} did #{damage} damage to #{defender.name}!".colorize(:red)
+    puts_slowly "#{defender.name} has #{defender.hp} HP left!".colorize(:light_green)
   end
 
 
@@ -44,10 +43,10 @@ class Stage < ActiveRecord::Base
     attacker.temp_def = (rand(25) + 6)
     if attacker.class == User
       puts_slowly "\nYou defended... like a coward."
-      puts_slowly "But you actually increased your defense by #{attacker.temp_def}."
+      puts_slowly "But you actually increased your defense by #{attacker.temp_def}.".colorize(:light_blue)
     elsif attacker.class == Enemy
       puts_slowly "\n#{attacker.name} put defenses up!"
-      puts_slowly "#{attacker.name} increased defense by #{attacker.temp_def}."
+      puts_slowly "#{attacker.name} increased defense by #{attacker.temp_def}.".colorize(:light_blue)
     end
 
     #recover some hp if possible
@@ -66,7 +65,7 @@ class Stage < ActiveRecord::Base
     die_chance = rand(100)
     case die_chance
     when 0..95
-      puts_slowly "#{enemy.name} slashed you in the back as you tried to run away, you coward."
+      puts_slowly "#{enemy.name} slashed you in the back as you tried to run away, you coward.".colorize(:red)
       user.hp = 0
     else
       puts_slowly "Wow, the enemy actually let you run away."
