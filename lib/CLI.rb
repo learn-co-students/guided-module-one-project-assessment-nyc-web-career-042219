@@ -146,7 +146,6 @@ class CLI
         stage.update(enemy_id: enemy.id)
 
         stage_level += 1
-        binding.pry if stage_level == 5
         stage.update(level: stage_level)
         #if we beat stage 4 you won!
         if stage_level == 5
