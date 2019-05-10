@@ -67,5 +67,9 @@ Run this command and enjoy!
 ## Acknowledgments
 
 * Thanks to https://cobwwweb.com/download-collection-of-images-from-url-using-ruby for the download image code!
-* Inspiration
-* etc
+*
+
+## Post Project Thoughts
+
+* Could have used TTY::Prompt for our menus
+* Could improve on refactoring our code in CLI
