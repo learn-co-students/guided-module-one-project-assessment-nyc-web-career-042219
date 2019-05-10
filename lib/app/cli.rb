@@ -117,15 +117,20 @@ class CLI
   #allow the user to select a movie from their movie list
   def find_movie_from_list(movie_results)
     puts "Please select the number of the movie you'd like to add to your list"
-    input = gets.chomp
+    input = gets.chomp.to_i
 
     new_input = input.to_i - 1 #convert the input to an integer and -1 from it
+    if input.between?(1, 10) == false
+      puts "Please input a number that corresponds to the movie you'd like to add to your list"
+      find_movie_from_list(movie_results)
+    else
       movie_title = ""
       movie_results.each do |movie| #iterate through the list of movies and select the one with the matching index
         if movie_results.index(movie) == new_input
           movie_title = movie
         end
       end
+    end
     find_movie_by_title(movie_title) #query the database and retrieve the expanded entry for the movie
   end
   
