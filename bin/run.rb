@@ -1,3 +1,8 @@
 require_relative '../config/environment'
 
-puts "hello world"
+ActiveRecord::Base.logger = nil
+
+system 'clear'
+
+game = CLI.new()
+game.title_screen
